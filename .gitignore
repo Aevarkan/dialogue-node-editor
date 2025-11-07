@@ -1,0 +1,26 @@
+# IGNORE EVERYTHING
+*
+
+# directories
+!src/
+!src/**
+!public/
+!public/**
+
+# files
+!index.html
+!.gitignore
+
+!LICENSE
+!README.md
+!package.json
+!package-lock.json
+!.editorconfig
+!env.d.ts
+!eslint.config.ts
+!tsconfig.app.json
+!tsconfig.json
+!tsconfig.node.json
+!tsconfig.vitest.json
+!vite.config.ts
+!vitest.config.ts
