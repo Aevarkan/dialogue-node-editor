@@ -1,0 +1,18 @@
+# IGNORE EVERYTHING
+*
+
+# directories
+!src/
+!src/**
+!static/
+!static/**
+
+# files
+!.gitignore
+!LICENSE
+!package.json
+!package-lock.json
+!README.md
+!svelte.config.js
+!tsconfig.json
+!vite.config.ts
