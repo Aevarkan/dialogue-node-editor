@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "NPC Dialogue (Loose Schema)",
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "type": "string"
+    },
+    "minecraft:npc_dialogue": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "format_version",
+    "minecraft:npc_dialogue"
+  ]
+}
