@@ -4,10 +4,11 @@
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
-    
-    "module": "ESNext",
-    "target": "ESNext",
-    "moduleResolution": "bundler",
+    "outDir": "dist",
+
+    "module": "es2022",
+    "target": "es2022",
+    "moduleResolution": "node",
   },
   "include": ["src/**/*.ts"]
 }
