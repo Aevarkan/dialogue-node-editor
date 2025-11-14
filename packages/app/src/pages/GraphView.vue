@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { VueFlow, useVueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
+// @ts-expect-error placeholder data
 import { initialEdges, initialNodes } from './initial-elements.js'
 import { Moon, RotateCcw, Sun } from 'lucide-vue-next'
 import { nodeTypes } from '@/components/index.js'
@@ -16,9 +17,23 @@ import { nodeTypes } from '@/components/index.js'
  */
 const { onInit, onNodeDragStop, onConnect, addEdges, setViewport } = useVueFlow()
 
-const nodes = ref(initialNodes)
+const nodes = ref([
+  { id: '1', type: 'default', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
+  { id: '2', type: 'default', position: { x: 200, y: 100 }, data: { label: 'Node 2' } }
+])
 
-const edges = ref(initialEdges)
+const edges = ref([
+  { id: 'e1-2', source: '1', target: '2', type: 'default' }
+])
+
+// example: wait until VueFlow is mounted
+onMounted(async () => {
+  await nextTick()
+  console.log('Vue Flow should now be fully mounted')
+  
+  // you could safely query nodes here
+  console.log(document.querySelectorAll('.vue-flow__node'))
+})
 
 // our dark mode toggle flag
 const dark = ref(false)
@@ -104,6 +119,8 @@ function toggleDarkMode() {
     :default-viewport="{ zoom: 1.5 }"
     :min-zoom="0.2"
     :max-zoom="4"
+    :nodes-draggable="false"
+    :pan-on-drag="false"
   >
     <Background pattern-color="#aaa" :gap="16" />
 

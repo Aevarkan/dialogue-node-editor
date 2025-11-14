@@ -31,9 +31,18 @@ import GraphView from './pages/GraphView.vue';
 </style>
 
 <style>
-html, body {
+/* #app targets the root HTML element */
+html, body, #app {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+.vue-flow__container, .vue-flow__canvas {
+  pointer-events: all;
 }
 </style>
