@@ -12,7 +12,7 @@
       "outFiles": [
         "${workspaceFolder}/packages/extension/dist/**/*.cjs"
       ],
-      // "preLaunchTask": "npm",
+      "preLaunchTask": "Build Extension",
       "request": "launch",
       "type": "extensionHost"
     }
