@@ -1,6 +1,6 @@
 {
   "name": "Extension Environment",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspaces/dialogue-graph",
   "build": {
     "dockerfile": "Dockerfile"
   }

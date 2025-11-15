@@ -12,7 +12,7 @@ RUN npm install -g pnpm --prefix=/usr/local
 RUN apt-get update && apt-get install -y build-essential git
 
 # Set workspace folder permissions
-RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
+RUN mkdir -p /workspaces && chown -R vscode:vscode /workspaces
 
 USER vscode
-WORKDIR /workspace
+WORKDIR /workspaces
