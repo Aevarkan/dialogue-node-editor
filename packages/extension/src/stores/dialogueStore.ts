@@ -4,8 +4,9 @@
 import { Scene } from "@workspace/common"
 import deepEqual from "fast-deep-equal"
 import { DialogueStoreDeleteMessage, DialogueStoreGenericMessage, StoreUpdateSource } from "../storeMessages"
+import { Disposable } from "vscode"
 
-class DialogueStore {
+export class DialogueStore {
   private dialogueMap = new Map<string, Scene>()
   /**
    * Array of `sceneId`s. This is not a normal string, it is `scene_tag` in `json`.
@@ -20,14 +21,23 @@ class DialogueStore {
 
   public onSceneCreate(callback: (storeMessage: DialogueStoreGenericMessage) => void) {
     this.listeners.onSceneCreate.push(callback)
+    return new Disposable(() => {
+      this.listeners.onSceneCreate = this.listeners.onSceneCreate.filter(cb => cb !== callback)
+    })
   }
 
   public onSceneUpdate(callback: (storeMessage: DialogueStoreGenericMessage) => void) {
     this.listeners.onSceneUpdate.push(callback)
+    return new Disposable(() => {
+      this.listeners.onSceneUpdate = this.listeners.onSceneUpdate.filter(cb => cb !== callback)
+    })
   }
 
   public onSceneDelete(callback: (storeMessage: DialogueStoreDeleteMessage) => void) {
     this.listeners.onSceneDelete.push(callback)
+    return new Disposable(() => {
+      this.listeners.onSceneDelete = this.listeners.onSceneDelete.filter(cb => cb !== callback)
+    })
   }
 
   /**
@@ -145,7 +155,7 @@ class DialogueStore {
    * @remarks
    * Order is sequential otherwise.
    * 
-   * If internal order and internal map disagree, returns `null, which should never happen.
+   * If internal order and internal map disagree, returns `null`, which should never happen.
    */
   public getScenes(): Scene[] | null {
     const orderedScenes: Scene[] = []
@@ -166,6 +176,3 @@ class DialogueStore {
   }
 
 }
-
-const dialogueStore = new DialogueStore()
-export default dialogueStore
