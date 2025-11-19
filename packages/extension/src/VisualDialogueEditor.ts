@@ -18,7 +18,7 @@ export class VisualDialogueEditor implements CustomTextEditorProvider {
     return registrationDisposable
   }
 
-  private static readonly viewType = "bedrockDialogueEditor.graphEditor"
+  public static readonly viewType = "bedrockDialogueEditor.graphEditor"
 
   private readonly extensionContext: ExtensionContext
 

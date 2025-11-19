@@ -24,6 +24,21 @@
     "*"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "bedrockDialogueEditor.openGraphEditor",
+        "title": "Open Dialogue Edior",
+        "category": "Visual"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "bedrockDialogueEditor.openGraphEditor",
+          "when": "editorLangId == json"
+        }
+      ]
+    },
     "configuration": {
       "title": "Bedrock Dialogue Editor",
       "properties": {
@@ -31,6 +46,21 @@
           "type": "boolean",
           "default": false,
           "description": "Automatically open dialogue files in the visual editor."
+        },
+        "bedrockDialogueEditor.switchFocusOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Switch focus to the dialogue editor tab when opening.\n\nThis only has an effect if `editorOpenLocation` is set to `beside`."
+        },
+        "bedrockDialogueEditor.editorOpenLocation": {
+          "type": "string",
+          "markdownDescription": "The column that the dialogue editor should open in when called from `openGraphEditor`.",
+          "enum": ["active", "beside"],
+          "markdownEnumDescriptions": [
+            "The dialogue editor opens in the *active* view column.",
+            "The dialogue editor opens in the view column *next* to the active one."
+          ],
+          "default": "beside"
         }
       }
     },

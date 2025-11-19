@@ -3,6 +3,7 @@
 
 import * as vscode from 'vscode';
 import { VisualDialogueEditor } from './VisualDialogueEditor';
+import { Command } from './classes/Command';
 // import { setContext } from './stores/contextStore';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -11,6 +12,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   const editorDisposable = VisualDialogueEditor.register(context)
   context.subscriptions.push(editorDisposable)
+
+  const openDialogueEditorCommand = Command.registerOpenDialogueEditor()
+  context.subscriptions.push(openDialogueEditorCommand)
 }
 
 export function deactivate() {}
