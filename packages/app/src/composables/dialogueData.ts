@@ -1,7 +1,6 @@
 // Copyright (c) 2025 Aevarkan
 // Licensed under the GPLv3 license
 
-import { useEventListener } from "@vueuse/core";
 import { SCENE_MAX_BUTTONS, type Button, type DeleteSceneMessage, type GenericSceneMessage, type Scene, type SceneMessage } from "@workspace/common"
 import { useVsCode } from "./vscodeMessages";
 import type { VisualScene } from "@/types";
@@ -80,7 +79,8 @@ export function useDialogueData() {
   }
 
   // listening to messages from vscode
-  useEventListener(window, "message", (event: MessageEvent) => {
+  // @ts-expect-error hacky work-around that works
+  document.addEventListener.call(window, "message", (event: MessageEvent) => {
 
     const messageData = event.data as SceneMessage
 
