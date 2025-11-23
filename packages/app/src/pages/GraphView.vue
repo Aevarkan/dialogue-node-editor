@@ -9,13 +9,19 @@ import { nodeTypes } from '@/components/index.js'
 import { useDialogueData } from '@/composables/dialogueData.js'
 import { useVsCode } from '@/composables/vscodeMessages'
 import type { ReadyMessage } from '@workspace/common'
+import SceneNode from '@/components/SceneNode.vue'
+import type { VisualScene } from '@/types'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, onSlotUpdate, updateScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
 
 const { onInit, onNodeDragStop, onConnect, addEdges, setViewport, addNodes, updateNodeData, removeNodes, findNode } = useVueFlow()
 
+// the key is sceneId
+const sceneMap = new Map<string, VisualScene>()
+
 onSceneCreate((sceneId, scene) => {
+  sceneMap.set(sceneId, scene)
   const position: XYPosition = {
     x: 0,
     y: 0
@@ -30,6 +36,7 @@ onSceneCreate((sceneId, scene) => {
 })
 
 onSceneUpdate((sceneId, scene) => {
+  sceneMap.set(sceneId, scene)
   // console.log("update", sceneId, scene)
   // check if the node exists first
   const node = findNode(sceneId)
@@ -51,6 +58,7 @@ onSceneUpdate((sceneId, scene) => {
 })
 
 onSceneDelete((sceneId) => {
+  sceneMap.delete(sceneId)
   removeNodes(sceneId)
 })
 
@@ -127,6 +135,26 @@ function resetTransform() {
 function toggleDarkMode() {
   dark.value = !dark.value
 }
+
+function handleEditNpcName(sceneId: string, newName: string) {
+  const existingScene = sceneMap.get(sceneId)
+  // should never happen
+  if (!existingScene) {
+    throw new Error("handleEditNpcName no scene")
+  }
+  existingScene.npcName = newName
+  updateScene(existingScene)
+}
+
+function handleEditSceneText(sceneId: string, newText: string) {
+  const existingScene = sceneMap.get(sceneId)
+  // should never happen
+  if (!existingScene) {
+    throw new Error("handleEditSceneText no scene")
+  }
+  existingScene.sceneText = newText
+  updateScene(existingScene)
+}
 </script>
 
 <template>
@@ -142,6 +170,10 @@ function toggleDarkMode() {
     <Background pattern-color="#aaa" :gap="16" />
 
     <MiniMap />
+
+    <template #node-scene="props">
+      <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" />
+    </template>
 
     <Controls position="top-left">
       <ControlButton title="Reset Transform" @click="resetTransform">
