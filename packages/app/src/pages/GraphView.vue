@@ -5,7 +5,6 @@ import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
 import { Moon, RotateCcw, Sun } from 'lucide-vue-next'
-import { nodeTypes } from '@/components/index.js'
 import { useDialogueData } from '@/composables/dialogueData.js'
 import { useVsCode } from '@/composables/vscodeMessages'
 import type { ReadyMessage } from '@workspace/common'
@@ -178,7 +177,6 @@ function handleEditSceneText(sceneId: string, newText: string) {
   <!-- it always fills up its parent container -->
   <VueFlow
     style="width: 100%; height: 100%;"
-    :node-types="nodeTypes"
     :class="{ dark }"
     :default-viewport="{ zoom: 1.5 }"
     :min-zoom="0.2"
