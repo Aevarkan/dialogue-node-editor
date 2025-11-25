@@ -173,6 +173,9 @@ function handleEditNpcName(sceneId: string, newName: string) {
   if (!existingScene) {
     throw new Error("handleEditNpcName no scene")
   }
+  // update for vueflow
+  updateNodeData<Scene>(sceneId, { npcName: newName })
+
   existingScene.npcName = newName
   updateScene(existingScene)
 }
@@ -183,6 +186,9 @@ function handleEditSceneText(sceneId: string, newText: string) {
   if (!existingScene) {
     throw new Error("handleEditSceneText no scene")
   }
+  // update for vueflow
+  updateNodeData<Scene>(sceneId, { sceneText: newText })
+
   existingScene.sceneText = newText
   updateScene(existingScene)
 }
