@@ -66,20 +66,24 @@ export class LogicalScene {
 
     // now for the open/close commands
     const commandMap = new Map<SceneCommandSlot, VisualSceneCommand>()
-    const openCommand: VisualSceneCommand = {
-      commands: scene.openCommands,
-      id: uuidv4(),
-      parentSceneId: scene.sceneId,
-      type: "open"
+    if (scene.openCommands.length > 0) {
+      const openCommand: VisualSceneCommand = {
+        commands: scene.openCommands,
+        id: uuidv4(),
+        parentSceneId: scene.sceneId,
+        type: "open"
+      }
+      commandMap.set("open", openCommand)
     }
-    const closeCommand: VisualSceneCommand = {
-      commands: scene.closeCommands,
-      id: uuidv4(),
-      parentSceneId: scene.sceneId,
-      type: "close"
+    if (scene.closeCommands.length > 0) {
+      const closeCommand: VisualSceneCommand = {
+        commands: scene.closeCommands,
+        id: uuidv4(),
+        parentSceneId: scene.sceneId,
+        type: "close"
+      }
+      commandMap.set("close", closeCommand)
     }
-    commandMap.set("close", closeCommand)
-    commandMap.set("open", openCommand)
 
     // now that all the ids are made, we can create the logical scene
     const visualScene = new LogicalScene(
