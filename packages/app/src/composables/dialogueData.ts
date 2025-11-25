@@ -19,7 +19,7 @@ export function useDialogueData() {
   const listeners = {
     onSceneCreate: [] as ((sceneId: string, scene: VisualScene) => void)[],
     onSceneUpdate: [] as ((sceneId: string, scene: VisualScene) => void)[],
-    onSceneDelete: [] as ((sceneId: string) => void)[]
+    onSceneDelete: [] as ((sceneId: string, children: string[]) => void)[]
   }
 
   /**
@@ -83,7 +83,10 @@ export function useDialogueData() {
     listeners.onSceneUpdate.push(callback)
   }
 
-  function onSceneDelete(callback: (sceneId: string) => void) {
+  /**
+   * Callback runs with `sceneId` to be deleted, along with any child nodes.
+   */
+  function onSceneDelete(callback: (sceneId: string, children: string[]) => void) {
     listeners.onSceneDelete.push(callback)
   }
 
@@ -113,7 +116,13 @@ export function useDialogueData() {
         break
 
       case "deleteScene":
-        listeners.onSceneDelete.forEach(fn => fn(messageData.sceneId))
+        const sceneToDelete = scenesMap.get(messageData.sceneId)
+        if (!sceneToDelete) break // already deleted
+
+        const commandIds = sceneToDelete.getCommands().map(cmd => cmd.id)
+        const buttonsIds = sceneToDelete.getSlots().map(slot => slot.id)
+        const childIds = [...commandIds, ...buttonsIds]
+        listeners.onSceneDelete.forEach(fn => fn(messageData.sceneId, childIds))
         scenesMap.delete(messageData.sceneId)
         break
     }
