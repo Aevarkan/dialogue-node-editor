@@ -46,8 +46,8 @@ function fromDialogue(dialogueData: DialogueData): Scene[] {
 function toDialogue(allScenes: Scene[], formatVersion: string): DialogueData {
   const dataScenes = allScenes.map(scn => toSceneData(scn))
   const dialogueFile: DialogueData = {
-    "minecraft:npc_dialogue": { scenes: dataScenes },
-    format_version: formatVersion
+    format_version: formatVersion,
+    "minecraft:npc_dialogue": { scenes: dataScenes }
   }
   return dialogueFile
 }
