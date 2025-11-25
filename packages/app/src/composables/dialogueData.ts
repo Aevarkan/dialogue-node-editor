@@ -23,14 +23,14 @@ export function useDialogueData() {
   }
 
   /**
-   * Gets the current scene for this id.
+   * Gets the currently stored scene from a unique id.
    */
   function getScene(sceneId: string) {
     return scenesMap.get(sceneId) ?? null
   }
 
   /**
-   * Sends a new scene to VSCode.
+   * Creates a scene, relaying the creation to VSCode.
    */
   function createScene(scene: VisualScene) {
     scenesMap.set(scene.sceneId, scene)
@@ -45,7 +45,7 @@ export function useDialogueData() {
   }
 
   /**
-   * Sends updated scene to VSCode.
+   * Updates the scene, relaying the update to VSCode.
    */
   function updateScene(scene: VisualScene) {
     scenesMap.set(scene.sceneId, scene)
@@ -60,7 +60,7 @@ export function useDialogueData() {
   }
 
   /**
-   * Sends scene deletion data to VSCode.
+   * Deletes the scene, relaying the message to VSCode.
    */
   function deleteScene(sceneId: string) {
     scenesMap.delete(sceneId)
