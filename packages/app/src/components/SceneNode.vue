@@ -54,14 +54,24 @@ const sceneTextUuid = `scene-text-${localUuid}`
         Open Command:
       </span>
       <button class="command-button" :aria-labelledby="openUuid">
-        <ArrowUpLeft />
+        <div v-if="props.data.openCommandNode">
+          <ArrowUpLeft />
+        </div>
+        <div v-else>
+          <Plus />
+        </div>
       </button>
 
       <span :id="closeUuid">
         Close Command:
       </span>
       <button class="command-button" :aria-labelledby="closeUuid">
-        <ArrowUpLeft />
+        <div v-if="props.data.closeCommandNode">
+          <ArrowUpLeft />
+        </div>
+        <div v-else>
+          <Plus />
+        </div>
       </button>
 
     </div>
