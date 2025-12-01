@@ -14,6 +14,7 @@ import type { LogicalScene } from '@/classes/LogicalScene'
 import SceneCommandNode from '@/components/SceneCommandNode.vue'
 import { toCommandNode, toSceneNode, toSlotNode } from '@/helpers/nodes'
 import type { DataChangeCategory, SceneCommandSlot, VisualScene, VisualSceneCommand, VisualSlot } from '@/types'
+import { useViewportPan } from '@/composables/viewportPanDrag'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
@@ -221,51 +222,57 @@ function handleEditCommand(parentSceneId: string, nodeId: string, commandType: S
   existingScene.setCommand(commandType, newCommands)
   updateScene(existingScene)
 }
+
+// viewport custom drag handler
+const viewportDrag = useViewportPan()
+
 </script>
 
 <template>
   <!-- it always fills up its parent container -->
-  <VueFlow
-    style="width: 100%; height: 100%;"
-    :class="{ dark }"
-    :default-viewport="{ zoom: 1.5 }"
-    :min-zoom="0.2"
-    :max-zoom="4"
-  >
-    <Background pattern-color="#aaa" :gap="16" />
-
-    <MiniMap />
-
-    <template #node-scene="props">
-      <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" />
-    </template>
-
-    <template #node-button-slot="props">
-      <ButtonSlotNode v-bind="props" @edit-button="handleButtonEdit" />
-    </template>
-
-    <template #node-command-slot="props">
-      <SceneCommandNode v-bind="props" @edit-command="handleEditCommand" />
-    </template>
-
-    <Controls position="top-left">
-      <ControlButton title="Reset Transform" @click="resetTransform">
-        <RotateCcw />
-      </ControlButton>
-
-      <!-- <ControlButton title="Shuffle Node Positions" @click="updatePos">
-        <Icon name="update" />
-      </ControlButton> -->
-
-      <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
-        <Sun v-if="dark"/>
-        <Moon v-else/>
-      </ControlButton>
-
-      <!-- <ControlButton title="Log `toObject`" @click="logToObject">
-        <Icon name="log" />
-      </ControlButton> -->
-    </Controls>
-  </VueFlow>
+  <div style="width: 100%; height: 100%;" @mousedown="viewportDrag.onMouseDown">
+    <VueFlow
+      style="width: 100%; height: 100%;"
+      :class="{ dark }"
+      :default-viewport="{ zoom: 1.5 }"
+      :min-zoom="0.2"
+      :max-zoom="4"
+    >
+      <Background pattern-color="#aaa" :gap="16" />
+  
+      <MiniMap />
+  
+      <template #node-scene="props">
+        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" />
+      </template>
+  
+      <template #node-button-slot="props">
+        <ButtonSlotNode v-bind="props" @edit-button="handleButtonEdit" />
+      </template>
+  
+      <template #node-command-slot="props">
+        <SceneCommandNode v-bind="props" @edit-command="handleEditCommand" />
+      </template>
+  
+      <Controls position="top-left">
+        <ControlButton title="Reset Transform" @click="resetTransform">
+          <RotateCcw />
+        </ControlButton>
+  
+        <!-- <ControlButton title="Shuffle Node Positions" @click="updatePos">
+          <Icon name="update" />
+        </ControlButton> -->
+  
+        <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
+          <Sun v-if="dark"/>
+          <Moon v-else/>
+        </ControlButton>
+  
+        <!-- <ControlButton title="Log `toObject`" @click="logToObject">
+          <Icon name="log" />
+        </ControlButton> -->
+      </Controls>
+    </VueFlow>
+  </div>
 </template>
 
