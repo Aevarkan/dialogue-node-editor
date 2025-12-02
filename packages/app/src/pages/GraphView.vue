@@ -227,6 +227,16 @@ function handleDeleteSlotNode(parentSceneId: string, index: number, nodeId: stri
   updateScene(scene)
 }
 
+function handleDeleteCommandNode(parentSceneId: string, commandType: SceneCommandSlot, nodeId: string) {
+  const scene = getScene(parentSceneId)
+  if (!scene) return
+  scene.deleteCommand(commandType)
+  removeNodes(nodeId)
+
+  // update the scene node's data
+  updateNodeData<VisualScene>(scene.sceneId, { ...scene.getVisualScene() })
+  updateScene(scene)
+}
 
 // viewport custom drag handler
 const viewportDrag = useViewportPan()
@@ -253,7 +263,7 @@ const viewportDrag = useViewportPan()
       </template>
   
       <template #node-command-slot="props">
-        <SceneCommandNode v-bind="props" @edit-command="handleEditCommand" @select-node="handleSelectNode" />
+        <SceneCommandNode v-bind="props" @edit-command="handleEditCommand" @select-node="handleSelectNode" @delete-command-node="handleDeleteCommandNode" />
       </template>
   
     </VueFlow>
