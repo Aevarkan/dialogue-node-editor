@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VueFlow, useVueFlow } from '@vue-flow/core'
+import { VueFlow, useVueFlow, type GraphNode, type Node } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
@@ -19,7 +19,7 @@ import { useViewportPan } from '@/composables/viewportPanDrag'
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
 
-const { onInit, onNodeDragStop, onConnect, addEdges, setViewport, addNodes, updateNodeData, removeNodes, findNode } = useVueFlow()
+const { onInit, onNodeDragStop, onConnect, addEdges, setViewport, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter } = useVueFlow()
 
 onSceneCreate((_sceneId, scene) => {
   addNewScene(scene)
@@ -223,6 +223,31 @@ function handleEditCommand(parentSceneId: string, nodeId: string, commandType: S
   updateScene(existingScene)
 }
 
+function handleSelectNode(nodeId: string) {
+  // buggy
+  // deselect all other nodes
+  // const selectedNodes = getSelectedNodes.value
+  // console.log(selectedNodes)
+  // this function is buggy
+  // addSelectedNodes
+  
+  // @ts-expect-error this works!
+  updateNode(nodeId, { selected: true })
+  
+  const nodeToSelect = findNode(nodeId)
+  if (!nodeToSelect) return
+  // zoom to the new node
+  const newX = nodeToSelect.computedPosition.x
+  const newY = nodeToSelect.computedPosition.y
+
+  setCenter(newX, newY, { duration: 100, zoom: viewport.value.zoom })
+
+  // setViewport(
+  //   { x: newX, y: newY, zoom: viewport.value.zoom },
+  //   { duration: 100, interpolate: "smooth" }
+  // )
+}
+
 // viewport custom drag handler
 const viewportDrag = useViewportPan()
 
@@ -241,7 +266,7 @@ const viewportDrag = useViewportPan()
       <Background pattern-color="#aaa" :gap="16" />
   
       <template #node-scene="props">
-        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" />
+        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" @select-node="handleSelectNode" />
       </template>
   
       <template #node-button-slot="props">
