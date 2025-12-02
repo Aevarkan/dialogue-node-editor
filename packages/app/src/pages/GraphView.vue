@@ -13,7 +13,7 @@ import ButtonSlotNode from '@/components/ButtonSlotNode.vue'
 import type { LogicalScene } from '@/classes/LogicalScene'
 import SceneCommandNode from '@/components/SceneCommandNode.vue'
 import { toCommandNode, toSceneNode, toSlotNode } from '@/helpers/nodes'
-import type { DataChangeCategory, SceneCommandSlot, VisualScene, VisualSceneCommand, VisualSlot } from '@/types'
+import type { DataChangeCategory, SceneCommandSlot, SceneFunctionSlot, VisualScene, VisualSceneCommand, VisualSlot } from '@/types'
 import { useViewportPan } from '@/composables/viewportPanDrag'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
@@ -248,6 +248,26 @@ function handleSelectNode(nodeId: string) {
   // )
 }
 
+function handleAddSceneSlot(sceneId: string, slot: SceneFunctionSlot) {
+  const scene = getScene(sceneId)
+  if (!scene) return
+  // command slot
+  if (slot === "close" || slot === "open") {
+    const sceneCommand = scene.setCommand(slot, [])
+    const commandNode = toCommandNode(sceneCommand)
+    addNodes(commandNode)
+  // button slot
+  } else {
+    const emptyButton: Button = { commands: [], displayName: "" }
+    const sceneButtonSlot = scene.addSlot(emptyButton)
+    const slotNode = toSlotNode(sceneButtonSlot)
+    addNodes(slotNode)
+  }
+  // send the update
+  updateScene(scene)
+  updateNodeData<VisualScene>(scene.sceneId, { ...scene.getVisualScene() })
+}
+
 // viewport custom drag handler
 const viewportDrag = useViewportPan()
 
@@ -266,7 +286,7 @@ const viewportDrag = useViewportPan()
       <Background pattern-color="#aaa" :gap="16" />
   
       <template #node-scene="props">
-        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" @select-node="handleSelectNode" />
+        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" @select-node="handleSelectNode" @add-scene-slot="handleAddSceneSlot" />
       </template>
   
       <template #node-button-slot="props">
