@@ -4,6 +4,8 @@
 # directories
 !.vscode/
 !.vscode/**
+!.github/
+!.github/**
 !packages/
 !packages/**
 

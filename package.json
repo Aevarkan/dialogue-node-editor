@@ -9,7 +9,8 @@
     "build:quick": "pnpm -F @workspace/app run build-only && pnpm -F bedrock-dialogue-node-editor run build",
     "build:dev": "pnpm -F @workspace/app run build:dev && pnpm -F bedrock-dialogue-node-editor run build",
     "package": "pnpm -F bedrock-dialogue-node-editor run package",
-    "dev:webapp": "pnpm --filter @workspace/app dev"
+    "dev:webapp": "pnpm --filter @workspace/app dev",
+    "workflow-release": "pnpm -F @workspace/common run build && pnpm -F @workspace/app run build-only && pnpm -F bedrock-dialogue-node-editor run build && pnpm -F bedrock-dialogue-node-editor run package"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
