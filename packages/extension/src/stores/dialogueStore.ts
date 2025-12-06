@@ -100,12 +100,14 @@ export class DialogueStore {
         sceneData: scene,
         sceneId: sceneTag
       }
-      this.listeners.onSceneCreate.forEach(fn => fn(createSceneMessage))
-
+      
       // update the internal array if the update is not from the extension
       if (source != StoreUpdateSource.Extension) {
         this.sceneTagOrder.push(sceneTag)
       }
+
+      // PUT THIS AFTER!!!!!!!!!!
+      this.listeners.onSceneCreate.forEach(fn => fn(createSceneMessage))
 
     // or an old one
     } else {
