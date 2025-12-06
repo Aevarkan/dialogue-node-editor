@@ -42,6 +42,7 @@ export function useDialogueData() {
       }
       postMessage(createSceneMessage)
     }
+    listeners.onSceneCreate.forEach(fn => fn(scene.sceneId, scene))
   }
 
   /**

@@ -3,16 +3,17 @@ import { VueFlow, useVueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { useDialogueData } from '@/composables/dialogueData.js'
 import { useVsCode } from '@/composables/vscodeMessages'
-import type { Button, ReadyMessage } from '@workspace/common'
+import type { Button, ReadyMessage, Scene } from '@workspace/common'
 import SceneNode from '@/components/SceneNode.vue'
 import ButtonSlotNode from '@/components/ButtonSlotNode.vue'
-import type { LogicalScene } from '@/classes/LogicalScene'
+import { LogicalScene } from '@/classes/LogicalScene'
 import SceneCommandNode from '@/components/SceneCommandNode.vue'
 import { toCommandNode, toSceneNode, toSlotNode } from '@/helpers/nodes'
 import type { DataChangeCategory, SceneCommandSlot, SceneFunctionSlot, VisualScene, VisualSceneCommand, VisualSlot } from '@/types'
 import { useViewportPan } from '@/composables/viewportPanDrag'
 import { useLayout } from '@/composables/useLayout'
 import { makeChildEdge } from '@/helpers/edges'
+import { ref } from 'vue'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
@@ -286,11 +287,39 @@ function handleIndexSwap(parentSceneId: string, currentIndex: number, targetInde
 // viewport custom drag handler
 const viewportDrag = useViewportPan()
 
+
+///////////////////////////////////////
+//        ADD SCENE BUTTON           //
+// TOO SMALL TO PUT IN OWN COMPONENT //
+///////////////////////////////////////
+
+const newSceneName = ref('')
+function handleAddNewSceneButton() {
+  const existingScene = getScene(newSceneName.value)
+  if (existingScene) {
+    return
+  }
+  const newScene: Scene = {
+    sceneId: newSceneName.value,
+    npcName: "",
+    sceneText: "",
+    buttons: [],
+    closeCommands: [],
+    openCommands: [],
+  }
+  const logicalScene = LogicalScene.fromScene(newScene)
+  createScene(logicalScene)
+  // addNewScene(logicalScene)
+
+  // empty the string
+  newSceneName.value = ""
+}
+
 </script>
 
 <template>
   <!-- it always fills up its parent container -->
-  <div style="width: 100%; height: 100%;" @mousedown="viewportDrag.onMouseDown">
+  <div class="wrapper" @mousedown="viewportDrag.onMouseDown">
     <VueFlow
       style="width: 100%; height: 100%;"
       :default-viewport="{ zoom: 1.5 }"
@@ -312,6 +341,25 @@ const viewportDrag = useViewportPan()
       </template>
   
     </VueFlow>
+
+    <div class="overlay-wrapper" @mousedown.stop>
+      <input v-model="newSceneName" />
+      <button @click="handleAddNewSceneButton">+</button>
+    </div>
   </div>
 </template>
 
+<style scoped>
+.wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+.overlay-wrapper {
+  position: absolute;
+  top: 4ch;
+  left: 4ch;
+}
+</style>
