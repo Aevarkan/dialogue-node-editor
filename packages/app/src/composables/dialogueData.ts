@@ -10,10 +10,25 @@ import { LogicalScene } from "@/classes/LogicalScene";
 
 export function useDialogueData() {
 
-  const { inWebview, postMessage } = useVsCode()
+  function updateState() {
+    updateDialogueState(
+      Array.from(scenesMap.values()).map(logicalScene => logicalScene.toJSON())
+    )
+  }
+
+  const { inWebview, postMessage, updateDialogueState, getDialogueState } = useVsCode()
 
   // this composable stores current logical scenes
   const scenesMap = new Map<string, LogicalScene>()
+
+  const oldScenes = getDialogueState()
+  console.log(oldScenes)
+
+  // the map is currently empty, add any saved scenes from state
+  for (const logicalSceneObject of getDialogueState()) {
+    const logicalScene = LogicalScene.fromJSON(logicalSceneObject)
+    scenesMap.set(logicalScene.sceneId, logicalScene)
+  }
 
   // event listeners
   const listeners = {
@@ -41,6 +56,7 @@ export function useDialogueData() {
         sceneData: scene.toScene()
       }
       postMessage(createSceneMessage)
+      updateState()
     }
   }
 
@@ -56,6 +72,7 @@ export function useDialogueData() {
         sceneData: scene.toScene()
       }
       postMessage(updateSceneMessage)
+      updateState()
     }
   }
 
@@ -70,6 +87,7 @@ export function useDialogueData() {
         sceneId: sceneId
       }
       postMessage(deleteSceneMessage)
+      updateState()
     }
   }
 
@@ -126,6 +144,7 @@ export function useDialogueData() {
         scenesMap.delete(messageData.sceneId)
         break
     }
+    updateState()
   })
 
   return { onSceneDelete, onSceneCreate, onSceneUpdate, deleteScene, createScene, updateScene, getScene }

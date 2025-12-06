@@ -276,6 +276,13 @@ export class LogicalScene {
     return updatedVisualScene
   }
 
+  public static fromJSON(plainScene: LogicalSceneObject) {
+    const commandMap = new Map<SceneCommandSlot, VisualSceneCommand>(plainScene.commandArray)
+    const buttonMap = new Map<number, VisualSlot>(plainScene.buttonArray)
+    const logicalScene = new LogicalScene(plainScene.scene, commandMap, buttonMap)
+    return logicalScene
+  }
+
   /**
    * Get the slots and commands that were updated since the last `updateScene` factory method.
    * @param clearAfter Whether to clear the update info after reading. Defaults to `false`.
@@ -571,6 +578,12 @@ export class LogicalScene {
     return [...this.commandMap.values()]
   }
 
+  public toJSON(): LogicalSceneObject {
+    const buttonArray = Array.from(this.buttonMap.entries())
+    const commandArray = Array.from(this.commandMap.entries())
+    return { buttonArray, commandArray, scene: this.scene }
+  }
+
   /**
    * Returns the raw scene data of the logical scene.
    */
@@ -596,4 +609,10 @@ export class LogicalScene {
     return visualScene
   }
   
+}
+
+export interface LogicalSceneObject {
+  buttonArray: [number, VisualSlot][],
+  commandArray: [SceneCommandSlot, VisualSceneCommand][],
+  scene: Scene
 }

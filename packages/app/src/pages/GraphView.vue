@@ -13,9 +13,9 @@ import type { DataChangeCategory, SceneCommandSlot, SceneFunctionSlot, VisualSce
 import { useViewportPan } from '@/composables/viewportPanDrag'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
-const { inWebview, postMessage } = useVsCode()
+const { inWebview, postMessage, getFlowState, updateFlowState } = useVsCode()
 
-const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter } = useVueFlow()
+const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter, toObject, fromObject } = useVueFlow()
 
 onSceneCreate((_sceneId, scene) => {
   addNewScene(scene)
@@ -51,6 +51,7 @@ onSceneUpdate((sceneId, scene) => {
           break
       }
     })
+    updateFlowState(toObject())
   }
 })
 
@@ -63,10 +64,11 @@ function handleCommandSlotUpdate(update: Exclude<DataChangeCategory, "deleted">,
       updateNodeData(command.id, command)
       break
   }
+  updateFlowState(toObject())
 }
 
 function handleButtonSlotUpdate(update: Exclude<DataChangeCategory, "deleted">, slot: VisualSlot) {
-    switch (update) {
+  switch (update) {
     case 'created':
       addNodes(toSlotNode(slot))
       break
@@ -74,6 +76,7 @@ function handleButtonSlotUpdate(update: Exclude<DataChangeCategory, "deleted">, 
       updateNodeData(slot.id, slot)
       break
   }
+  updateFlowState(toObject())
 }
 
 function addNewScene(newScene: LogicalScene) {
@@ -88,10 +91,12 @@ function addNewScene(newScene: LogicalScene) {
     const commandNode = toCommandNode(cmd)
     addNodes(commandNode)
   })
+  updateFlowState(toObject())
 }
 
 onSceneDelete((sceneId, children) => {
   removeNodes([sceneId, ...children])
+  updateFlowState(toObject())
 })
 
 ///////////////////
@@ -99,6 +104,7 @@ onSceneDelete((sceneId, children) => {
 ///////////////////
 
 onInit((vueFlowInstance) => {
+  fromObject(getFlowState())
   // instance is the same as the return of `useVueFlow`
   vueFlowInstance.fitView()
   console.log("In webview: ", inWebview())
@@ -118,6 +124,7 @@ onInit((vueFlowInstance) => {
  */
 onConnect((connection) => {
   addEdges(connection)
+  updateFlowState(toObject())
 })
 
 
@@ -127,6 +134,7 @@ onConnect((connection) => {
 
 function handleButtonEdit(parentSceneId: string, nodeId: string, buttonIndex: number, button: Button) {
   updateNodeData<VisualSlot>(nodeId, { button })
+  updateFlowState(toObject())
 
   const existingScene = getScene(parentSceneId)
   // should never happen
@@ -146,6 +154,7 @@ function handleEditNpcName(sceneId: string, newName: string) {
   }
   // update for vueflow
   updateNodeData<VisualScene>(sceneId, { npcName: newName })
+  updateFlowState(toObject())
 
   existingScene.npcName = newName
   updateScene(existingScene)
@@ -159,6 +168,7 @@ function handleEditSceneText(sceneId: string, newText: string) {
   }
   // update for vueflow
   updateNodeData<VisualScene>(sceneId, { sceneText: newText })
+  updateFlowState(toObject())
 
   existingScene.sceneText = newText
   updateScene(existingScene)
@@ -166,6 +176,7 @@ function handleEditSceneText(sceneId: string, newText: string) {
 
 function handleEditCommand(parentSceneId: string, nodeId: string, commandType: SceneCommandSlot, newCommands: string[]) {
   updateNodeData<VisualSceneCommand>(nodeId, { commands: newCommands })
+  updateFlowState(toObject())
 
   const existingScene = getScene(parentSceneId)
   if (!existingScene) {
@@ -187,6 +198,7 @@ function handleSelectNode(nodeId: string) {
   const newY = nodeToSelect.computedPosition.y
 
   setCenter(newX, newY, { duration: 100, zoom: viewport.value.zoom })
+  updateFlowState(toObject())
 }
 
 function handleAddSceneSlot(sceneId: string, slot: SceneFunctionSlot) {
@@ -211,6 +223,7 @@ function handleAddSceneSlot(sceneId: string, slot: SceneFunctionSlot) {
   // send the update
   updateScene(scene)
   updateNodeData<VisualScene>(scene.sceneId, { ...scene.getVisualScene() })
+  updateFlowState(toObject())
 }
 
 function handleDeleteSlotNode(parentSceneId: string, index: number, nodeId: string) {
@@ -230,6 +243,7 @@ function handleDeleteSlotNode(parentSceneId: string, index: number, nodeId: stri
   // update the scene node's data
   updateNodeData<VisualScene>(scene.sceneId, { ...scene.getVisualScene() })
   updateScene(scene)
+  updateFlowState(toObject())
 }
 
 function handleDeleteCommandNode(parentSceneId: string, commandType: SceneCommandSlot, nodeId: string) {
@@ -241,6 +255,7 @@ function handleDeleteCommandNode(parentSceneId: string, commandType: SceneComman
   // update the scene node's data
   updateNodeData<VisualScene>(scene.sceneId, { ...scene.getVisualScene() })
   updateScene(scene)
+  updateFlowState(toObject())
 }
 
 function handleIndexSwap(parentSceneId: string, currentIndex: number, targetIndex: number) {
@@ -256,6 +271,7 @@ function handleIndexSwap(parentSceneId: string, currentIndex: number, targetInde
   // update the scene as well
   updateNodeData<VisualScene>(scene.sceneId, { ...scene.getVisualScene() })
   updateScene(scene)
+  updateFlowState(toObject())
 }
 
 // viewport custom drag handler
