@@ -1,21 +1,24 @@
 // Copyright (c) 2025 Aevarkan
 // Licensed under the GPLv3 license
 
-import { GenericMessage } from "@workspace/common";
+import { SceneMessage } from "@workspace/common";
 
 export class MessageQueue {
-  private queue: GenericMessage[] = []
+  /**
+   * Message queue, where the key is the scene id.
+   */
+  private queue = new Map<string, SceneMessage>()
   /**
    * Whether it's safe to send messages.
    */
   private isReady = false
-  private sendMessage: (message: GenericMessage) => void
+  private sendMessage: (message: SceneMessage) => void
 
   /**
    * Creates an unready message queue.
    * @param messageFunction 
    */
-  public constructor(messageFunction: (message: GenericMessage) => void) {
+  public constructor(messageFunction: (message: SceneMessage) => void) {
     this.sendMessage = messageFunction
   }
 
@@ -35,23 +38,31 @@ export class MessageQueue {
 
   /**
    * Adds a message to the queue, or sends it if ready.
+   * 
+   * @remarks
+   * Overrides any previous messages for the same scene.
    */
-  public enqueueMessage(message: GenericMessage) {
+  public enqueueMessage(message: SceneMessage) {
     if (this.isReady) {
       this.sendMessage(message)
     } else {
-      this.queue.push(message)
+      // if the creation message hasn't yet been sent, then an update message is still a creation message
+      const existingMessage = this.queue.get(message.sceneId)
+      if (existingMessage?.messageType === "createScene" && message.messageType === "updateScene") {
+        message.messageType = "createScene"
+      }
+
+      this.queue.set(message.sceneId, message)
     }
   }
 
   /**
-   * Sends all queued messages in order.
+   * Sends all queued messages.
    */
   private flushMessages() {
-    while (this.queue.length > 0) {
-      // not undefined as queue length is checked
-      const oldestMessage = this.queue.shift()!
-      this.sendMessage(oldestMessage)
+    const messages = this.queue.values()
+    for (const message of messages) {
+      this.sendMessage(message)
     }
   }
 
@@ -59,7 +70,7 @@ export class MessageQueue {
    * Empties the message queue.
    */
   public clear() {
-    this.queue = []
+    this.queue = new Map()
   }
 
 }
