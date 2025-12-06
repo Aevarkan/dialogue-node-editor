@@ -43,7 +43,7 @@ export function useLayout() {
     setState(stateObject)
   }
 
-  function setPosition(sceneId: string, position: XYPosition, nodeStateOptions: NodeStateOptions) {
+  function setNodePosition(sceneId: string, position: XYPosition, nodeStateOptions: NodeStateOptions) {
     // ensure there is a state
     let sceneState = layoutMap.get(sceneId)
     if (!sceneState) {
@@ -79,7 +79,7 @@ export function useLayout() {
     saveState()
   }
 
-  function getPosition(sceneId: string, nodeStateOptions: NodeStateOptions) {
+  function getNodePosition(sceneId: string, nodeStateOptions: NodeStateOptions) {
     const sceneState = layoutMap.get(sceneId)
     if (!sceneState) {
       return
@@ -112,6 +112,6 @@ export function useLayout() {
     return currentViewport
   }
 
-  return { setPosition, getPosition, setViewportState, getViewportState }
+  return { setNodePosition, getNodePosition, setViewportState, getViewportState }
 
 }

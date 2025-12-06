@@ -15,7 +15,7 @@ import { useLayout } from '@/composables/useLayout'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
-const { getPosition, getViewportState, setViewportState, setPosition } = useLayout()
+const { getNodePosition, getViewportState, setViewportState, setNodePosition } = useLayout()
 
 const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter, onViewportChangeEnd } = useVueFlow()
 
@@ -79,17 +79,17 @@ function handleButtonSlotUpdate(update: Exclude<DataChangeCategory, "deleted">, 
 }
 
 function addNewScene(newScene: LogicalScene) {
-  const sceneNodePosition = getPosition(newScene.sceneId, { nodeType: "scene" })
+  const sceneNodePosition = getNodePosition(newScene.sceneId, { nodeType: "scene" })
   const sceneNode = toSceneNode(newScene.getVisualScene(), sceneNodePosition)
   addNodes(sceneNode)
 
   newScene.getSlots().forEach((slot) => {
-    const slotNodePosition = getPosition(newScene.sceneId, { nodeType: "button", slot: slot.index})
+    const slotNodePosition = getNodePosition(newScene.sceneId, { nodeType: "button", slot: slot.index})
     const slotNode = toSlotNode(slot, slotNodePosition)
     addNodes(slotNode)
   })
   newScene.getCommands().forEach(cmd => {
-    const commandNodePosition = getPosition(newScene.sceneId, { nodeType: "command", slot: cmd.type})
+    const commandNodePosition = getNodePosition(newScene.sceneId, { nodeType: "command", slot: cmd.type})
     const commandNode = toCommandNode(cmd, commandNodePosition)
     addNodes(commandNode)
   })
@@ -264,7 +264,7 @@ function handleIndexSwap(parentSceneId: string, currentIndex: number, targetInde
     updateNodeData<VisualSlot>(slot.id, { ...slot })
     // assertion is valid, the node must exist as the id does too
     const nodePosition = findNode(slot.id)!.computedPosition
-    setPosition(parentSceneId, { x: nodePosition.x, y: nodePosition.y }, { nodeType: "button", slot: slot.index })
+    setNodePosition(parentSceneId, { x: nodePosition.x, y: nodePosition.y }, { nodeType: "button", slot: slot.index })
   })
 
   // update the scene as well

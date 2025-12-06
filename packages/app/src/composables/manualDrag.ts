@@ -15,7 +15,7 @@ export function useNodeDrag(nodeId: string, sceneId: string, nodeInfo: NodeState
 
   let nodeInformation = nodeInfo
 
-  const { setPosition } = useLayout()
+  const { setNodePosition } = useLayout()
 
   function updateNodeInfo(nodeInfo: NodeStateOptions) {
     console.log(nodeId, sceneId, nodeInfo)
@@ -47,7 +47,7 @@ export function useNodeDrag(nodeId: string, sceneId: string, nodeInfo: NodeState
     updateNodePositions([
       { id: nodeId, position: newPosition, distance: { x: 0, y: 0 }, from: { ...startPosition }, dimensions: { width: 0, height: 0 } }
     ], true, true)
-    setPosition(sceneId, newPosition, nodeInformation)
+    setNodePosition(sceneId, newPosition, nodeInformation)
     console.log(sceneId, newPosition, nodeInformation)
   }
 
