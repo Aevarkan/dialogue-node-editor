@@ -30,7 +30,7 @@ export function useDialogueData() {
   }
 
   /**
-   * Creates a scene, relaying the creation to VSCode.
+   * Creates a scene, relaying the creation to VSCode and `onSceneCreate` event listeners.
    */
   function createScene(scene: LogicalScene) {
     scenesMap.set(scene.sceneId, scene)
@@ -61,10 +61,9 @@ export function useDialogueData() {
   }
 
   /**
-   * Deletes the scene, relaying the message to VSCode.
+   * Deletes the scene, relaying the message to VSCode and `onSceneDelete` event listeners.
    */
   function deleteScene(sceneId: string) {
-    scenesMap.delete(sceneId)
     if (inWebview()) {
       const deleteSceneMessage: DeleteSceneMessage = {
         messageType: "deleteScene",
@@ -72,6 +71,16 @@ export function useDialogueData() {
       }
       postMessage(deleteSceneMessage)
     }
+
+    // send to event listeners too
+    const sceneToDelete = scenesMap.get(sceneId)
+    if (!sceneToDelete) return // already deleted
+
+    const commandIds = sceneToDelete.getCommands().map(cmd => cmd.id)
+    const buttonsIds = sceneToDelete.getSlots().map(slot => slot.id)
+    const childIds = [...commandIds, ...buttonsIds]
+    listeners.onSceneDelete.forEach(fn => fn(sceneId, childIds))
+    scenesMap.delete(sceneId)
   }
 
   // NOTE: These event listeners only fire from updates from VS Code
