@@ -4,6 +4,10 @@
 interface VsCodeApi {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   postMessage: (message: any) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setState: (object: any) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getState: () => any
 }
 
 let vscodeApi: VsCodeApi | null = null
@@ -45,5 +49,25 @@ export function useVsCode() {
     }
   }
 
-  return { postMessage, inWebview }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function setState(object: any) {
+    const api = getVsCodeApi()
+    if (api) {
+      api.setState(object)
+    } else {
+      console.warn('Not running inside a VS Code Webview. State not saved: ', object)
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function getState(): any | undefined {
+    const api = getVsCodeApi()
+    if (api) {
+      return api.getState()
+    } else {
+      return undefined
+    }
+  }
+
+  return { postMessage, inWebview, setState, getState }
 }
