@@ -24,9 +24,11 @@ export function useLayout() {
   const layoutMap = new Map<string, SceneState>()
 
   // initialised from saved state
-  const savedState = getState() as LayoutState
-  for (const savedScene of savedState.state) {
-    layoutMap.set(savedScene.sceneId, savedScene)
+  const savedState = getState() as LayoutState | undefined
+  if (savedState) {
+    for (const savedScene of savedState.state) {
+      layoutMap.set(savedScene.sceneId, savedScene)
+    }
   }
 
   function saveState() {
