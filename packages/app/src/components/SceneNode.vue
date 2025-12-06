@@ -9,7 +9,7 @@ import { useNodeDrag } from '@/composables/manualDrag';
 
 const props = defineProps<NodeProps<VisualScene>>()
 
-const drag = useNodeDrag(props.id)
+const drag = useNodeDrag(props.id, props.data.sceneId, { nodeType: "scene" })
 
 // sceneId change means deleting the scene
 // no need to track it

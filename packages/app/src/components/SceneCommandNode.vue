@@ -7,7 +7,7 @@ import { computed } from 'vue';
 
 const props = defineProps<NodeProps<VisualSceneCommand>>()
 
-const drag = useNodeDrag(props.id)
+const drag = useNodeDrag(props.id, props.data.parentSceneId, { nodeType: "command", slot: props.data.type })
 
 const commandsRef = computed({
   get: () => props.data.commands.join("\n"),

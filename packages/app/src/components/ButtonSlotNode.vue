@@ -8,7 +8,14 @@ import { computed, ref, watch } from 'vue';
 
 const props = defineProps<NodeProps<VisualSlot>>()
 
-const drag = useNodeDrag(props.id)
+// note that the index is NOT static for button slots
+const drag = useNodeDrag(props.id, props.data.parentSceneId, { nodeType: "button", slot: props.data.index })
+
+// update index
+watch(
+  () => props.data.index,
+  (newIndex) => drag.updateNodeInfo({ nodeType: "button", slot: newIndex })
+)
 
 const buttonRef = ref<Button>({ ...props.data.button })
 
