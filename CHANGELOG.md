@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
 - added group node button to scene node
+
+### Changed
+
+- text areas now resize automatically
 
 ## [0.1.1] 2025-12-07
 
