@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { v4 as uuidv4 } from 'uuid'
 import type { SceneButtonSlot, SceneFunctionSlot, VisualScene } from '@/types';
 import { SCENE_MAX_BUTTONS } from '@workspace/common';
-import { ArrowUpLeft, Plus, Trash2, X } from 'lucide-vue-next';
+import { ArrowUpLeft, Plus, Trash2, X, Shrink } from 'lucide-vue-next';
 import { useNodeDrag } from '@/composables/manualDrag';
 import { useTextareaAutosize } from '@vueuse/core';
 
@@ -34,7 +34,12 @@ const emit = defineEmits<{
   (event: "selectNode", nodeId: string): void
   (event: "addSceneSlot", sceneId: string, sceneSlot: SceneFunctionSlot): void
   (event: "deleteScene", sceneId: string): void
+  (event: "collectSceneNodes", sceneId: string): void
 }>()
+
+function collectSceneNodes() {
+  emit("collectSceneNodes", props.data.sceneId)
+}
 
 function deleteScene() {
   emit("deleteScene", props.data.sceneId)
@@ -79,6 +84,9 @@ const sceneTextUuid = `scene-text-${localUuid}`
     <div>
       <button @click="deleteScene" @mousedown.stop>
         <Trash2 />
+      </button>
+      <button @click="collectSceneNodes" @mousedown.stop>
+        <Shrink />
       </button>
     </div>
     <div class="scene-node-header">

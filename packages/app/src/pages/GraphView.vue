@@ -14,10 +14,12 @@ import { useViewportPan } from '@/composables/viewportPanDrag'
 import { useLayout } from '@/composables/useLayout'
 import { makeChildEdge } from '@/helpers/edges'
 import { ref } from 'vue'
+import { useDagreLayout } from '@/composables/useDagreLayout'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
 const { getNodePosition, getViewportState, setViewportState, setNodePosition } = useLayout()
+const { groupAroundScene } = useDagreLayout()
 
 const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter, onViewportChangeEnd } = useVueFlow()
 
@@ -85,19 +87,20 @@ function handleButtonSlotUpdate(update: Exclude<DataChangeCategory, "deleted">, 
 }
 
 function addNewScene(newScene: LogicalScene) {
-  const sceneNodePosition = getNodePosition(newScene.sceneId, { nodeType: "scene" })
+  const sceneNodePosition = getNodePosition(newScene.sceneId, { nodeType: "scene" }) ?? { x: 0, y: 0 }
+  const positions = groupAroundScene(newScene, sceneNodePosition)
   const sceneNode = toSceneNode(newScene.getVisualScene(), sceneNodePosition)
   addNodes(sceneNode)
 
   newScene.getSlots().forEach((slot) => {
-    const slotNodePosition = getNodePosition(newScene.sceneId, { nodeType: "button", slot: slot.index})
+    const slotNodePosition = getNodePosition(newScene.sceneId, { nodeType: "button", slot: slot.index}) ?? positions[slot.id]
     const slotNode = toSlotNode(slot, slotNodePosition)
     addNodes(slotNode)
     const slotEdge = makeChildEdge(newScene.sceneId, slot.id)
     addEdges(slotEdge)
   })
   newScene.getCommands().forEach(cmd => {
-    const commandNodePosition = getNodePosition(newScene.sceneId, { nodeType: "command", slot: cmd.type})
+    const commandNodePosition = getNodePosition(newScene.sceneId, { nodeType: "command", slot: cmd.type}) ?? positions[cmd.id]
     const commandNode = toCommandNode(cmd, commandNodePosition)
     addNodes(commandNode)
     const commandEdge = makeChildEdge(newScene.sceneId, cmd.id)
@@ -315,6 +318,18 @@ function handleAddNewSceneButton() {
   newSceneName.value = ""
 }
 
+// GROUP AROUND SCENE BUTTON
+function groupNodesAroundScene(sceneId: string) {
+  const scene = getScene(sceneId)
+  const sceneNode = findNode(sceneId)
+  if (!scene || !sceneNode) return
+
+  const positions = groupAroundScene(scene, sceneNode.computedPosition)
+  for (const [id, pos] of Object.entries(positions)) {
+    updateNode(id, { position: pos })
+  }
+}
+
 </script>
 
 <template>
@@ -329,7 +344,7 @@ function handleAddNewSceneButton() {
       <Background pattern-color="#aaa" :gap="16" />
   
       <template #node-scene="props">
-        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" @select-node="handleSelectNode" @add-scene-slot="handleAddSceneSlot" @delete-scene="deleteScene" />
+        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" @select-node="handleSelectNode" @add-scene-slot="handleAddSceneSlot" @delete-scene="deleteScene" @collect-scene-nodes="groupNodesAroundScene" />
       </template>
   
       <template #node-button-slot="props">
