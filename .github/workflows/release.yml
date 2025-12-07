@@ -36,3 +36,8 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload $GITHUB_REF_NAME packages/extension/bedrock-dialogue-node-editor.vsix
+
+      - name: Publish extension to marketplace
+        run: pnpm run deploy
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

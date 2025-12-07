@@ -1,6 +1,6 @@
 {
   "name": "bedrock-dialogue-node-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "author": "Aevarkan",
   "license": "GPL-3.0-only",
@@ -11,7 +11,8 @@
     "copy-info-files": "node scripts/copy-info-files.cjs",
     "compile": "tsdown",
     "build": "pnpm run copy-media && pnpm run compile",
-    "package": "pnpm run copy-info-files && vsce package -o bedrock-dialogue-node-editor.vsix"
+    "package": "pnpm run copy-info-files && vsce package -o bedrock-dialogue-node-editor.vsix",
+    "deploy-marketplace": "vsce publish"
   },
   "publisher": "aevarkan",
   "repository": {
