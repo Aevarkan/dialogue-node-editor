@@ -6,8 +6,12 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: marketplace
+      url: https://marketplace.visualstudio.com/items?itemName=aevarkan.bedrock-dialogue-node-editor
+
     permissions:
       contents: write
 
