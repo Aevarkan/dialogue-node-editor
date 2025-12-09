@@ -32,6 +32,9 @@ html, body {
   height: 100%;
 }
 
+button:disabled {
+  opacity: 50%;
+}
 /* VS CODE COLOURS */
 button {
   background-color: var(--vscode-button-background);
