@@ -145,7 +145,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
 
 <style scoped>
 .button-node-container {
-  background-color: rgb(142, 108, 180);
+  background-color: var(--custom-button-slot-node-colour, rgb(142, 108, 180));
   display: flex;
   align-content: center;
   flex-direction: column;

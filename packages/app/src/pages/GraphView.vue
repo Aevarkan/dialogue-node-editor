@@ -17,11 +17,14 @@ import { ref } from 'vue'
 import { useNodeLayout } from '@/composables/useNodeLayout'
 import { MiniMap } from '@vue-flow/minimap'
 import { MapMinus, MapPlus, Plus } from 'lucide-vue-next'
+import { useTheme } from '@/composables/useTheme'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
 const { getNodePosition, getViewportState, setViewportState, setNodePosition } = useLayoutData()
 const { arrangeAroundScene } = useNodeLayout()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const colours = useTheme()
 
 const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter, onViewportChangeEnd } = useVueFlow()
 

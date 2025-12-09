@@ -76,7 +76,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
 
 <style scoped>
 .command-node-container {
-  background-color: rgb(119, 194, 89);
+  background-color: var(--custom-command-node-colour,rgb(119, 194, 89));
   display: flex;
   align-content: center;
   flex-direction: column;

@@ -167,7 +167,7 @@ const sceneTextUuid = `scene-text-${localUuid}`
 
 <style scoped>
 .scene-node-container {
-  background-color: cadetblue;
+  background-color: var(--custom-scene-node-colour, cadetblue);
   display: flex;
   align-content: center;
   flex-direction: column;
