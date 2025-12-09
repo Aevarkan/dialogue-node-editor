@@ -189,6 +189,25 @@ class DialogueMessageManager {
       }
     })
 
+    ///////////////////////
+    //// COLOUR CONFIG ////
+    ///////////////////////
+
+    const configListener = workspace.onDidChangeConfiguration((event) => {
+      const configChange = event.affectsConfiguration("bedrockDialogueEditor.nodeColors")
+      if (configChange) {
+        // NOTE: This MUST be put into a helper function IF this same piece of code is repeated
+        const colours = workspace.getConfiguration("bedrockDialogueEditor").get<NodeColorsObject>("nodeColors")
+        const configColoursMessage: ConfigMessage = {
+          messageType: "config",
+          sceneNodeColour: colours?.scene ?? "#5f9ea0",
+          buttonSlotNodeColour: colours?.button ?? "#8e6cb4",
+          commandNodeColour: colours?.command ?? "#77c259"
+        }
+        messageQueue.enqueueMessage(configColoursMessage)
+      }
+    })
+
     //////////////////////
     ////// CLEAN UP //////
     //////////////////////
@@ -200,6 +219,7 @@ class DialogueMessageManager {
       createListener.dispose()
       updateListener.dispose()
       deleteListener.dispose()
+      configListener.dispose()
       this.queueDeleteDialogueStore(dialogueTextDocument.uri.toString())
     })
 
