@@ -325,6 +325,14 @@ function handleAddNewSceneButton() {
   newSceneName.value = ""
 }
 
+function canAddNewScene(): boolean {
+  const existingScene = getScene(newSceneName.value)
+  if (existingScene) return false
+  // no empty scene name is allowed
+  if (newSceneName.value === "") return false
+  return true
+}
+
 // GROUP AROUND SCENE BUTTON
 function groupNodesAroundScene(sceneId: string) {
   const scene = getScene(sceneId)
@@ -376,11 +384,17 @@ function toggleMiniMap() {
     </VueFlow>
 
     <div class="overlay-wrapper" @mousedown.stop>
+      <!-- New Scene Button -->
       <input v-model="newSceneName" />
-      <button @click="handleAddNewSceneButton">
+      <button v-if="canAddNewScene()" @click="handleAddNewSceneButton">
         <Plus />
       </button>
+      <button v-else disabled>
+        <Plus />
+      </button>
+
       <br />
+      <!-- MiniMap Button -->
       <button @click="toggleMiniMap">
         <MapMinus v-if="showMiniMap" />
         <MapPlus v-else />
