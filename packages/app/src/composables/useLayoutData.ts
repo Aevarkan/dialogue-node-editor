@@ -7,7 +7,8 @@ import type { NodeStateOptions } from "@/types";
 
 interface LayoutState {
   state: SceneState[],
-  viewPort: ViewportTransform
+  viewPort: ViewportTransform,
+  dockedScenes: string[]
 }
 
 interface SceneState {
@@ -24,12 +25,16 @@ export function useLayoutData() {
   
   const layoutMap = new Map<string, SceneState>()
   let currentViewport: ViewportTransform = { x: 0, y: 0, zoom: 1 }
+  const dockedScenes = new Set<string>()
 
   // initialised from saved state
   const savedState = getState() as LayoutState | undefined
   if (savedState) {
     for (const savedScene of savedState.state) {
       layoutMap.set(savedScene.sceneId, savedScene)
+    }
+    for (const dockedScene of savedState.dockedScenes) {
+      dockedScenes.add(dockedScene)
     }
     currentViewport = savedState.viewPort
   }
@@ -38,9 +43,24 @@ export function useLayoutData() {
     const stateArray = Array.from(layoutMap.values())
     const stateObject: LayoutState = {
       state: stateArray,
-      viewPort: currentViewport
+      viewPort: currentViewport,
+      dockedScenes: Array.from(dockedScenes)
     }
     setState(stateObject)
+  }
+
+  function addDockedScene(sceneId: string) {
+    dockedScenes.add(sceneId)
+    saveState()
+  }
+
+  function removeDockedScene(sceneId: string) {
+    dockedScenes.delete(sceneId)
+    saveState()
+  }
+
+  function getDockedScenes() {
+    return Array.from(dockedScenes)
   }
 
   function setNodePosition(sceneId: string, position: XYPosition, nodeStateOptions: NodeStateOptions) {
@@ -112,6 +132,6 @@ export function useLayoutData() {
     return currentViewport
   }
 
-  return { setNodePosition, getNodePosition, setViewportState, getViewportState }
+  return { setNodePosition, getNodePosition, setViewportState, getViewportState, addDockedScene, removeDockedScene, getDockedScenes }
 
 }

@@ -2,10 +2,18 @@
 // Licensed under the GPLv3 license
 
 import { computed, ref } from "vue"
+import { useLayoutData } from "./useLayoutData"
 
 export function useSceneDock() {
 
+  const { addDockedScene, removeDockedScene, getDockedScenes } = useLayoutData()
+
   const dockedScenes = ref(new Set<string>())
+  // initialised from state
+  for (const dockedScene of getDockedScenes()) {
+    dockedScenes.value.add(dockedScene)
+  }
+  
   const listeners = {
     onDockScene: [] as ((sceneId: string) => void)[],
     onUndockScene: [] as ((sceneId: string) => void)[]
@@ -15,6 +23,7 @@ export function useSceneDock() {
     const alreadyDocked = (dockedScenes.value.has(sceneId))
     if (alreadyDocked) return
 
+    addDockedScene(sceneId)
     dockedScenes.value.add(sceneId)
     listeners.onDockScene.forEach(fn => fn(sceneId))
   }
@@ -23,6 +32,7 @@ export function useSceneDock() {
     const wasDeleted = dockedScenes.value.delete(sceneId)
     if (!wasDeleted) return
 
+    removeDockedScene(sceneId)
     listeners.onUndockScene.forEach(fn => fn(sceneId))
   }
 
