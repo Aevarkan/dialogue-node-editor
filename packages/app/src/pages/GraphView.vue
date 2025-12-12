@@ -36,6 +36,15 @@ onSceneCreate((sceneId, scene) => {
   addNewScene(scene)
 })
 
+onUndockScene(sceneId => {
+  const scene = getScene(sceneId)
+  if (!scene) {
+    throw new Error(`Could not undock scene '${sceneId}'. LogicalScene not found!`)
+  }
+
+  addNewScene(scene)
+})
+
 onSceneUpdate((sceneId, scene) => {
   if (isSceneDocked(sceneId)) return
   // console.log("update", sceneId, scene)
@@ -450,6 +459,14 @@ function toggleMiniMap() {
           <MapMinus v-if="showMiniMap" />
           <MapPlus v-else />
         </button>
+      </div>
+
+      <!-- Scene Dock -->
+      <div>
+        <div v-for="sceneId in dockedSceneIds" :key="sceneId" >
+          {{ sceneId }}
+          <button @click="undockScene(sceneId)">Undock</button>
+        </div>
       </div>
     </div>
   </div>

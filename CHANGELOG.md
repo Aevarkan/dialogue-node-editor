@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- added scene dock
+
 - made node colours configurable via `nodeColors` setting
 - made node editor use VS Code editor theme colours
 
