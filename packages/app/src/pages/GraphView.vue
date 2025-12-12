@@ -26,7 +26,7 @@ const { getNodePosition, getViewportState, setViewportState, setNodePosition } =
 const { arrangeAroundScene } = useNodeLayout()
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const colours = useTheme()
-const { dockScene, onDockScene, undockScene, onUndockScene, isSceneDocked, getDockedSceneIds, deleteScene: deleteDockedScene } = useSceneDock()
+const { dockScene, onDockScene, undockScene, onUndockScene, isSceneDocked, dockedSceneIds, deleteScene: deleteDockedScene } = useSceneDock()
 
 const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter, onViewportChangeEnd } = useVueFlow()
 

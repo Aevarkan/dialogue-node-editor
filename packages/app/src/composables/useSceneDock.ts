@@ -1,24 +1,26 @@
 // Copyright (c) 2025 Aevarkan
 // Licensed under the GPLv3 license
 
+import { computed, ref } from "vue"
+
 export function useSceneDock() {
 
-  const dockedScenes = new Set<string>()
+  const dockedScenes = ref(new Set<string>())
   const listeners = {
     onDockScene: [] as ((sceneId: string) => void)[],
     onUndockScene: [] as ((sceneId: string) => void)[]
   }
 
   function dockScene(sceneId: string) {
-    const alreadyDocked = (dockedScenes.has(sceneId))
+    const alreadyDocked = (dockedScenes.value.has(sceneId))
     if (alreadyDocked) return
 
-    dockedScenes.add(sceneId)
+    dockedScenes.value.add(sceneId)
     listeners.onDockScene.forEach(fn => fn(sceneId))
   }
 
   function undockScene(sceneId: string) {
-    const wasDeleted = dockedScenes.delete(sceneId)
+    const wasDeleted = dockedScenes.value.delete(sceneId)
     if (!wasDeleted) return
 
     listeners.onUndockScene.forEach(fn => fn(sceneId))
@@ -33,17 +35,15 @@ export function useSceneDock() {
   }
 
   function deleteScene(sceneId: string): boolean {
-    return dockedScenes.delete(sceneId)
+    return dockedScenes.value.delete(sceneId)
   }
 
   function isSceneDocked(sceneId: string) {
-    return dockedScenes.has(sceneId)
+    return dockedScenes.value.has(sceneId)
   }
 
-  function getDockedSceneIds() {
-    return Array.from(dockedScenes)
-  }
+  const dockedSceneIds = computed(() => Array.from(dockedScenes.value))
 
 
-  return { dockScene, undockScene, onDockScene, onUndockScene, isSceneDocked, getDockedSceneIds, deleteScene }
+  return { dockScene, undockScene, onDockScene, onUndockScene, isSceneDocked, dockedSceneIds, deleteScene }
 }
