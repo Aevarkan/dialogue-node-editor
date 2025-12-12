@@ -18,6 +18,7 @@ import { useNodeLayout } from '@/composables/useNodeLayout'
 import { MiniMap } from '@vue-flow/minimap'
 import { MapMinus, MapPlus, Plus } from 'lucide-vue-next'
 import { useTheme } from '@/composables/useTheme'
+import { useSceneDock } from '@/composables/useSceneDock'
 
 const { createScene, deleteScene, onSceneCreate, onSceneDelete, onSceneUpdate, updateScene, getScene } = useDialogueData()
 const { inWebview, postMessage } = useVsCode()
@@ -25,14 +26,18 @@ const { getNodePosition, getViewportState, setViewportState, setNodePosition } =
 const { arrangeAroundScene } = useNodeLayout()
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const colours = useTheme()
+const { dockScene, onDockScene, undockScene, onUndockScene, isSceneDocked, getDockedSceneIds, deleteScene: deleteDockedScene } = useSceneDock()
 
 const { onInit, onConnect, addEdges, addNodes, updateNodeData, removeNodes, findNode, updateNode, viewport, setCenter, onViewportChangeEnd } = useVueFlow()
 
-onSceneCreate((_sceneId, scene) => {
+onSceneCreate((sceneId, scene) => {
+  if (isSceneDocked(sceneId)) return
+
   addNewScene(scene)
 })
 
 onSceneUpdate((sceneId, scene) => {
+  if (isSceneDocked(sceneId)) return
   // console.log("update", sceneId, scene)
   // check if the node exists first
   const node = findNode(sceneId)
@@ -113,8 +118,19 @@ function addNewScene(newScene: LogicalScene) {
   })
 }
 
+onDockScene(sceneId => {
+  const scene = getScene(sceneId)
+  if (!scene) {
+    throw new Error(`Could not dock scene '${sceneId}'. LogicalScene not found!`)
+  }
+
+  const children = scene.getChildNodeIds()
+  removeNodes([sceneId, ...children])
+})
+
 onSceneDelete((sceneId, children) => {
   removeNodes([sceneId, ...children])
+  deleteDockedScene(sceneId)
 })
 
 ///////////////////
@@ -394,7 +410,16 @@ function toggleMiniMap() {
       </template>
 
       <template #node-scene="props">
-        <SceneNode v-bind="props" @edit-npc-name="handleEditNpcName" @edit-scene-text="handleEditSceneText" @select-node="handleSelectNode" @add-scene-slot="handleAddSceneSlot" @delete-scene="deleteScene" @collect-scene-nodes="groupNodesAroundScene" />
+        <SceneNode
+          v-bind="props"
+          @edit-npc-name="handleEditNpcName"
+          @edit-scene-text="handleEditSceneText"
+          @select-node="handleSelectNode"
+          @add-scene-slot="handleAddSceneSlot"
+          @delete-scene="deleteScene"
+          @collect-scene-nodes="groupNodesAroundScene"
+          @dock-scene="dockScene"
+        />
       </template>
   
       <template #node-button-slot="props">
