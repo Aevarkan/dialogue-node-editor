@@ -16,5 +16,9 @@ export function useConfig() {
     return formatVersion
   }
 
-  return { getFormatVersion, getEditDelay }
+  function getTabSize() {
+    return workspace.getConfiguration("editor").get<number>("tabSize") ?? 4
+  }
+
+  return { getFormatVersion, getEditDelay, getTabSize }
 }

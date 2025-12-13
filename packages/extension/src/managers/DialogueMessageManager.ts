@@ -12,7 +12,7 @@ import { MessageQueue } from "../classes/MessageQueue"
 import { useConfigMessage } from "../helpers/configMessage"
 import { useConfig } from "../helpers/useConfig"
 
-const { getFormatVersion } = useConfig()
+const { getFormatVersion, getTabSize } = useConfig()
 const { createCurrentConfigMessage } = useConfigMessage()
 
 class DialogueMessageManager {
@@ -109,7 +109,7 @@ class DialogueMessageManager {
       } else {
 
         // default tab size is 4
-        const tabSizeSetting = workspace.getConfiguration("editor").get<number>("tabSize") ?? 4
+        const tabSizeSetting = getTabSize()
         const setting: DialogueFileFormatSettings = {
           prettify: true,
           indentationSize: tabSizeSetting
@@ -150,7 +150,7 @@ class DialogueMessageManager {
       } else {
 
         // default tab size is 4
-        const tabSizeSetting = workspace.getConfiguration("editor").get<number>("tabSize") ?? 4
+        const tabSizeSetting = getTabSize()
         const setting: DialogueFileFormatSettings = {
           prettify: true,
           indentationSize: tabSizeSetting
