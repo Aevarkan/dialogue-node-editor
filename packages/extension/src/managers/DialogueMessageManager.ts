@@ -196,6 +196,11 @@ class DialogueMessageManager {
       }
     })
 
+    const themeChangeListener = window.onDidChangeActiveColorTheme(_theme => {
+      const configColoursMessage = createCurrentConfigMessage()
+      messageQueue.enqueueMessage(configColoursMessage)
+    })
+
     //////////////////////
     ////// CLEAN UP //////
     //////////////////////
@@ -208,6 +213,7 @@ class DialogueMessageManager {
       updateListener.dispose()
       deleteListener.dispose()
       configListener.dispose()
+      themeChangeListener.dispose()
       this.queueDeleteDialogueStore(dialogueTextDocument.uri.toString())
     })
 
