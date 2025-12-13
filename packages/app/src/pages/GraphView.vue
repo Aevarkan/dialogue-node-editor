@@ -16,7 +16,7 @@ import { makeChildEdge } from '@/helpers/edges'
 import { ref } from 'vue'
 import { useNodeLayout } from '@/composables/useNodeLayout'
 import { MiniMap } from '@vue-flow/minimap'
-import { MapMinus, MapPlus, Plus } from 'lucide-vue-next'
+import { Folder, FolderOpen, MapMinus, MapPlus, MousePointerClick, Plus } from 'lucide-vue-next'
 import { useTheme } from '@/composables/useTheme'
 import { useSceneDock } from '@/composables/useSceneDock'
 
@@ -396,6 +396,11 @@ function doubleDouble(sceneId: string) {
 
 // minimap toggle
 const showMiniMap = ref(false)
+const showSceneDock = ref(true)
+
+function toggleSceneDock() {
+  showSceneDock.value = !showSceneDock.value
+}
 
 function toggleMiniMap() {
   showMiniMap.value = !showMiniMap.value
@@ -442,8 +447,20 @@ function toggleMiniMap() {
     </VueFlow>
 
     <div class="overlay-wrapper">
-      <!-- New Scene Button -->
-      <div id="new-scene-button-wrapper">
+      <div id="overlay-buttons">
+        <!-- MiniMap -->
+        <button @click="toggleMiniMap" @mousedown.stop>
+          <MapMinus v-if="showMiniMap" />
+          <MapPlus v-else />
+        </button>
+        
+        <!-- Scene Dock Toggle Button -->
+        <button @click="toggleSceneDock" @mousedown.stop>
+          <FolderOpen v-if="showSceneDock" />
+          <Folder v-else />
+        </button>
+
+        <!-- New Scene Button -->
         <button v-if="canAddNewScene()" @click="handleAddNewSceneButton" @mousedown.stop>
           <Plus />
         </button>
@@ -453,19 +470,13 @@ function toggleMiniMap() {
         <input v-model="newSceneName" placeholder="steve_intro_scene" @mousedown.stop />
       </div>
 
-      <!-- MiniMap Button -->
-      <div>
-        <button @click="toggleMiniMap" @mousedown.stop>
-          <MapMinus v-if="showMiniMap" />
-          <MapPlus v-else />
-        </button>
-      </div>
-
       <!-- Scene Dock -->
-      <div>
-        <div v-for="sceneId in dockedSceneIds" :key="sceneId" >
+      <div v-if="showSceneDock" id="scene-dock-wrapper" @mousedown.stop>
+        <div class="scene-dock-element" v-for="sceneId in dockedSceneIds" :key="sceneId">
+          <button @click="undockScene(sceneId)">
+            <MousePointerClick />
+          </button>
           {{ sceneId }}
-          <button @click="undockScene(sceneId)">Undock</button>
         </div>
       </div>
     </div>
@@ -489,7 +500,25 @@ function toggleMiniMap() {
   flex-direction: column;
 }
 
-#new-scene-button-wrapper {
+#scene-dock-wrapper {
+  overflow-y: auto;
+  gap: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 50vh;
+}
+
+.scene-dock-element {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0.2rem;
+  background-color: var(--vscode-sideBar-background);
+  padding-right: 1rem;
+  border-radius: 10px;
+}
+
+#overlay-buttons {
   display: flex;
   gap: 0.5rem;
   align-items: center;
