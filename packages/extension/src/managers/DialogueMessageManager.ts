@@ -5,8 +5,8 @@ import { ExtensionContext, TextDocument, WebviewPanel, window, workspace } from 
 import { DialogueStore } from "../stores/dialogueStore"
 import { getWebviewContent } from "../helpers/webviewHelper"
 import { fromDialogue, parseRawDialogue, toDialogue } from "../helpers/dialogueParser"
-import { DialogueStoreDeleteMessage, DialogueStoreGenericMessage, StoreUpdateSource } from "../storeMessages"
-import { DeleteSceneMessage, GenericSceneMessage, GenericMessage, ConfigMessage } from "@workspace/common"
+import { DialogueStoreCreateMessage, DialogueStoreDeleteMessage, DialogueStoreUpdateMessage, StoreUpdateSource } from "../storeMessages"
+import { DeleteSceneMessage, GenericSceneMessage, GenericMessage } from "@workspace/common"
 import { DialogueDocument, DialogueFileFormatSettings } from "../wrappers/DialogueDocument"
 import { MessageQueue } from "../classes/MessageQueue"
 import { useConfigMessage } from "../helpers/configMessage"
@@ -93,7 +93,7 @@ class DialogueMessageManager {
     ///////////////////////
 
     // update message handler
-    const handleCreateUpdateMessage = (storeMessage: DialogueStoreGenericMessage) => {
+    const handleCreateUpdateMessage = (storeMessage: DialogueStoreCreateMessage | DialogueStoreUpdateMessage) => {
       const { messageSource, messageType, sceneData, sceneId } = storeMessage
 
       // send the message to webview

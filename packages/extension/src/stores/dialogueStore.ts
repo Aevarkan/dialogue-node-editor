@@ -3,7 +3,7 @@
 
 import { GenericSceneMessage, Scene } from "@workspace/common"
 import deepEqual from "fast-deep-equal"
-import { DialogueStoreDeleteMessage, DialogueStoreGenericMessage, StoreSceneUpdateInfo, StoreUpdateSource } from "../storeMessages"
+import { DialogueStoreCreateMessage, DialogueStoreDeleteMessage, DialogueStoreUpdateMessage, StoreSceneUpdateInfo, StoreUpdateSource } from "../storeMessages"
 import { Disposable } from "vscode"
 
 export class DialogueStore {
@@ -14,19 +14,19 @@ export class DialogueStore {
   private sceneTagOrder: string[] = []
   
   private listeners = {
-    onSceneCreate: [] as ((storeMessage: DialogueStoreGenericMessage) => void)[],
-    onSceneUpdate: [] as ((storeMessage: DialogueStoreGenericMessage) => void)[],
+    onSceneCreate: [] as ((storeMessage: DialogueStoreCreateMessage) => void)[],
+    onSceneUpdate: [] as ((storeMessage: DialogueStoreUpdateMessage) => void)[],
     onSceneDelete: [] as ((storeMessage: DialogueStoreDeleteMessage) => void)[]
   }
 
-  public onSceneCreate(callback: (storeMessage: DialogueStoreGenericMessage) => void) {
+  public onSceneCreate(callback: (storeMessage: DialogueStoreCreateMessage) => void) {
     this.listeners.onSceneCreate.push(callback)
     return new Disposable(() => {
       this.listeners.onSceneCreate = this.listeners.onSceneCreate.filter(cb => cb !== callback)
     })
   }
 
-  public onSceneUpdate(callback: (storeMessage: DialogueStoreGenericMessage) => void) {
+  public onSceneUpdate(callback: (storeMessage: DialogueStoreUpdateMessage) => void) {
     this.listeners.onSceneUpdate.push(callback)
     return new Disposable(() => {
       this.listeners.onSceneUpdate = this.listeners.onSceneUpdate.filter(cb => cb !== callback)
@@ -94,7 +94,7 @@ export class DialogueStore {
 
     // it might be a completely new scene
     if (isNew) {
-      const createSceneMessage: DialogueStoreGenericMessage = {
+      const createSceneMessage: DialogueStoreCreateMessage = {
         messageSource: source,
         messageType: "createScene",
         sceneData: scene,
@@ -111,11 +111,13 @@ export class DialogueStore {
 
     // or an old one
     } else {
-      const updateSceneMessage: DialogueStoreGenericMessage = {
+      const changes = compareScenes(existingScene, scene)
+      const updateSceneMessage: DialogueStoreUpdateMessage = {
         messageSource: source,
         messageType: "updateScene",
         sceneData: scene,
-        sceneId: sceneTag
+        sceneId: sceneTag,
+        updateInfo: changes
       }
       this.listeners.onSceneUpdate.forEach(fn => fn(updateSceneMessage))
     }
