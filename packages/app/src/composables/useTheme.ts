@@ -18,13 +18,23 @@ export function useTheme() {
     // we only care about configuration messages here
     if (messageData.messageType !== "config") return
 
-    document.documentElement.style.setProperty("--custom-scene-node-colour", messageData.sceneNodeColour)
-    document.documentElement.style.setProperty("--custom-button-slot-node-colour", messageData.buttonSlotNodeColour)
-    document.documentElement.style.setProperty("--custom-command-node-colour", messageData.commandNodeColour)
-    
-    sceneNodeColour.value = messageData.sceneNodeColour
-    buttonSlotNodeColour.value = messageData.buttonSlotNodeColour
-    commandNodeColour.value = messageData.commandNodeColour
+    if (messageData.currentColourThemeKind === "light") {
+      document.documentElement.style.setProperty("--custom-scene-node-colour", messageData.sceneNodeColour)
+      document.documentElement.style.setProperty("--custom-button-slot-node-colour", messageData.buttonSlotNodeColour)
+      document.documentElement.style.setProperty("--custom-command-node-colour", messageData.commandNodeColour)
+      
+      sceneNodeColour.value = messageData.sceneNodeColour
+      buttonSlotNodeColour.value = messageData.buttonSlotNodeColour
+      commandNodeColour.value = messageData.commandNodeColour
+    } else {
+      document.documentElement.style.setProperty("--custom-scene-node-colour", messageData.sceneNodeDarkColour)
+      document.documentElement.style.setProperty("--custom-button-slot-node-colour", messageData.buttonSlotNodeDarkColour)
+      document.documentElement.style.setProperty("--custom-command-node-colour", messageData.commandNodeDarkColour)
+      
+      sceneNodeColour.value = messageData.sceneNodeDarkColour
+      buttonSlotNodeColour.value = messageData.buttonSlotNodeDarkColour
+      commandNodeColour.value = messageData.commandNodeDarkColour
+    }
   })
 
   return { sceneNodeColour, buttonSlotNodeColour, commandNodeColour }
