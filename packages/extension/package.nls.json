@@ -35,5 +35,8 @@
   "bedrockDialogueEditor.nodeColors.buttonDark.title": "Dark Button",
   "bedrockDialogueEditor.nodeColors.buttonDark.desc": "The button node's dark theme colour.",
   "bedrockDialogueEditor.nodeColors.commandDark.title": "Dark Command",
-  "bedrockDialogueEditor.nodeColors.commandDark.desc": "The command node's dark theme colour."
+  "bedrockDialogueEditor.nodeColors.commandDark.desc": "The command node's dark theme colour.",
+
+  "bedrockDialogueEditor.fileFormatVersion.title": "File Format Version",
+  "bedrockDialogueEditor.fileFormatVersion.desc": "The dialogue file's `format_version` property. It is not recommended that you change this."
 }

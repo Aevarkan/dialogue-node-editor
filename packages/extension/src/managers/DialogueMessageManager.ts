@@ -8,10 +8,11 @@ import { fromDialogue, parseRawDialogue, toDialogue } from "../helpers/dialogueP
 import { DialogueStoreDeleteMessage, DialogueStoreGenericMessage, StoreUpdateSource } from "../storeMessages"
 import { DeleteSceneMessage, GenericSceneMessage, GenericMessage, ConfigMessage } from "@workspace/common"
 import { DialogueDocument, DialogueFileFormatSettings } from "../wrappers/DialogueDocument"
-import { DIALOGUE_FILE_FORMAT_VERSION } from "../constants"
 import { MessageQueue } from "../classes/MessageQueue"
 import { useConfigMessage } from "../helpers/configMessage"
+import { useConfig } from "../helpers/useConfig"
 
+const { getFormatVersion } = useConfig()
 const { createCurrentConfigMessage } = useConfigMessage()
 
 class DialogueMessageManager {
@@ -123,7 +124,7 @@ class DialogueMessageManager {
           throw new Error("NULL value was passed!!! THIS IS A BUG!!!")
         }
 
-        const dialogueData = toDialogue(scenes, DIALOGUE_FILE_FORMAT_VERSION)
+        const dialogueData = toDialogue(scenes, getFormatVersion())
 
         dialogueDocument.setDialogueText(dialogueData)
       }
@@ -164,7 +165,7 @@ class DialogueMessageManager {
           throw new Error("NULL value was passed!!! THIS IS A BUG!!!")
         }
 
-        const dialogueData = toDialogue(scenes, DIALOGUE_FILE_FORMAT_VERSION)
+        const dialogueData = toDialogue(scenes, getFormatVersion())
 
         dialogueDocument.setDialogueText(dialogueData)
       }

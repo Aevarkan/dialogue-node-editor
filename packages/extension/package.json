@@ -127,6 +127,12 @@
           },
           "required": ["scene", "button", "command", "sceneDark", "buttonDark", "commandDark"],
           "additionalProperties": false
+        },
+        "bedrockDialogueEditor.fileFormatVersion": {
+          "title": "%bedrockDialogueEditor.fileFormatVersion.title%",
+          "markdownDescription": "%bedrockDialogueEditor.fileFormatVersion.desc%",
+          "type": "string",
+          "default": "1.14.0"
         }
       }
     },
