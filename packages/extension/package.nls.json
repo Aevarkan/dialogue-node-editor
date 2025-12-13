@@ -28,5 +28,12 @@
   "bedrockDialogueEditor.nodeColors.button.title": "Button",
   "bedrockDialogueEditor.nodeColors.button.desc": "The button node's colour.",
   "bedrockDialogueEditor.nodeColors.command.title": "Command",
-  "bedrockDialogueEditor.nodeColors.command.desc": "The command node's colour."
+  "bedrockDialogueEditor.nodeColors.command.desc": "The command node's colour.",
+
+  "bedrockDialogueEditor.nodeColors.sceneDark.title": "Dark Scene",
+  "bedrockDialogueEditor.nodeColors.sceneDark.desc": "The scene node's dark theme colour.",
+  "bedrockDialogueEditor.nodeColors.buttonDark.title": "Dark Button",
+  "bedrockDialogueEditor.nodeColors.buttonDark.desc": "The button node's dark theme colour.",
+  "bedrockDialogueEditor.nodeColors.commandDark.title": "Dark Command",
+  "bedrockDialogueEditor.nodeColors.commandDark.desc": "The command node's dark theme colour."
 }

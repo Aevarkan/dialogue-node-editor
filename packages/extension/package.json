@@ -76,7 +76,10 @@
           "default": {
             "scene": "#268bb3",
             "button": "#9b68b4",
-            "command": "#429740"
+            "command": "#429740",
+            "sceneDark": "#263b53",
+            "buttonDark": "#4b2568",
+            "commandDark": "#265525"
           },
           "properties": {
             "scene": {
@@ -99,9 +102,30 @@
               "description": "%bedrockDialogueEditor.nodeColors.command.desc%",
               "format": "color-hex",
               "default": "#429740"
+            },
+            "sceneDark": {
+              "type": "string",
+              "title": "%bedrockDialogueEditor.nodeColors.sceneDark.title%",
+              "description": "%bedrockDialogueEditor.nodeColors.sceneDark.desc%",
+              "format": "color-hex",
+              "default": "#263b53"
+            },
+            "buttonDark": {
+              "type": "string",
+              "title": "%bedrockDialogueEditor.nodeColors.buttonDark.title%",
+              "description": "%bedrockDialogueEditor.nodeColors.buttonDark.desc%",
+              "format": "color-hex",
+              "default": "#4b2568"
+            },
+            "commandDark": {
+              "type": "string",
+              "title": "%bedrockDialogueEditor.nodeColors.commandDark.title%",
+              "description": "%bedrockDialogueEditor.nodeColors.commandDark.desc%",
+              "format": "color-hex",
+              "default": "#265525"
             }
           },
-          "required": ["scene", "button", "command"],
+          "required": ["scene", "button", "command", "sceneDark", "buttonDark", "commandDark"],
           "additionalProperties": false
         }
       }
