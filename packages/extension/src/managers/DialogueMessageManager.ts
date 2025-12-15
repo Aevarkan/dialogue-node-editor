@@ -11,6 +11,7 @@ import { DialogueDocument, DialogueFileFormatSettings } from "../wrappers/Dialog
 import { MessageQueue } from "../classes/MessageQueue"
 import { useConfigMessage } from "../helpers/configMessage"
 import { useConfig } from "../helpers/useConfig"
+import { DialogueDebouncer } from "../classes/DialogueDebouncer"
 
 const { getFormatVersion, getTabSize } = useConfig()
 const { createCurrentConfigMessage } = useConfigMessage()
@@ -24,6 +25,9 @@ class DialogueMessageManager {
     // a store specifically for this file
     const store = this.getDialogueStore(dialogueTextDocument.uri.toString())
     const messageQueue = new MessageQueue(message => webviewPanel.webview.postMessage(message))
+
+    // for debouncing updates to not crowd undo
+    const debouncer = new DialogueDebouncer(dialogueTextDocument)
 
     // allow scripts (quite important)
     webviewPanel.webview.options = {
@@ -124,9 +128,14 @@ class DialogueMessageManager {
           throw new Error("NULL value was passed!!! THIS IS A BUG!!!")
         }
 
-        const dialogueData = toDialogue(scenes, getFormatVersion())
+        if (storeMessage.messageType === "createScene") {
+          debouncer.clear()
+          const dialogueData = toDialogue(scenes, getFormatVersion())
+          dialogueDocument.setDialogueText(dialogueData)
+        } else {
+          debouncer.enqueueChange(scenes, storeMessage.updateInfo)
+        }
 
-        dialogueDocument.setDialogueText(dialogueData)
       }
     }
 
@@ -148,6 +157,8 @@ class DialogueMessageManager {
       
       // otherwise update document
       } else {
+
+        debouncer.clear()
 
         // default tab size is 4
         const tabSizeSetting = getTabSize()
@@ -214,6 +225,7 @@ class DialogueMessageManager {
       updateListener.dispose()
       deleteListener.dispose()
       configListener.dispose()
+      debouncer.dispose()
       themeChangeListener.dispose()
       this.queueDeleteDialogueStore(dialogueTextDocument.uri.toString())
     })
