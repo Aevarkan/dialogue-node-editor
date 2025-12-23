@@ -487,6 +487,7 @@ function getCenterViewportNode() {
         <button v-else disabled @mousedown.stop>
           <Plus />
         </button>
+        <!-- "steve_intro_scene" is NOT to be localised -->
         <input v-model="newSceneName" placeholder="steve_intro_scene" @mousedown.stop />
       </div>
 

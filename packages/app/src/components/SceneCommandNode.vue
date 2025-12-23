@@ -5,6 +5,9 @@ import { type NodeProps } from '@vue-flow/core'
 import { useTextareaAutosize } from '@vueuse/core';
 import { ArrowUpLeft, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 const props = defineProps<NodeProps<VisualSceneCommand>>()
 
@@ -50,7 +53,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
           <Trash2 />
         </button>
         <label :for=sceneUuid>
-          Parent Scene:
+          {{ t("label.parentScene") }}
         </label>
       </div>
       <span :id=sceneUuid>
@@ -58,7 +61,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
       </span>
   
       <label :for=indexUuid>
-        Runs On:
+        {{ t("label.runsOn") }}
       </label>
       <span :id=indexUuid>
         {{ props.data.type }}
@@ -67,7 +70,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
 
     <div class="command-text">
       <label :for="commandTextUuid">
-        Commands
+        {{ t("label.commands") }}
       </label>
       <textarea :id="commandTextUuid" ref="textAreaRef" v-model="commandsRef" @mousedown.stop />
     </div>

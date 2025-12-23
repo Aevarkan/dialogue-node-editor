@@ -6,6 +6,9 @@ import { useTextareaAutosize } from '@vueuse/core';
 import type { Button } from '@workspace/common';
 import { ArrowUpLeft, Minus, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 const props = defineProps<NodeProps<VisualSlot>>()
 
@@ -97,7 +100,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
           <Trash2 />
         </button>
         <label :for=sceneUuid>
-          Parent Scene:
+          {{ t("label.parentScene") }}
         </label>
       </div>
       <span :id=sceneUuid>
@@ -105,7 +108,7 @@ const commandTextUuid = `button-commands-${props.data.id}`
       </span>
   
       <label :for=indexUuid>
-        Slot Index:
+        {{ t("label.slotIndex") }}
       </label>
       <div :id=indexUuid>
         <span>
@@ -129,14 +132,14 @@ const commandTextUuid = `button-commands-${props.data.id}`
       </div>
   
       <label :for=nameUuid>
-        Display Name:
+        {{ t("label.displayName") }}
       </label>
       <input :id="nameUuid" v-model="displayName" @mousedown.stop />
     </div>
 
     <div class="button-commands">
       <label :for="commandTextUuid">
-        Commands
+        {{ t("label.commands") }}
       </label>
       <textarea :id="commandTextUuid" ref="textAreaRef" v-model="commandText" @mousedown.stop />
     </div>

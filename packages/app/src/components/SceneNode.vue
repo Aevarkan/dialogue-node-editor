@@ -7,6 +7,9 @@ import { SCENE_MAX_BUTTONS } from '@workspace/common';
 import { ArrowUpLeft, Plus, Trash2, X, Shrink, ArchiveRestore } from 'lucide-vue-next';
 import { useNodeDrag } from '@/composables/manualDrag';
 import { useTextareaAutosize } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 const props = defineProps<NodeProps<VisualScene>>()
 
@@ -99,19 +102,19 @@ const sceneTextUuid = `scene-text-${localUuid}`
     </div>
     <div class="scene-node-header">
       <label :for=sceneUuid>
-        Scene ID:
+        {{ t("label.sceneId") }}
       </label>
       <span :id=sceneUuid>
         {{ props.data.sceneId }}
       </span>
 
       <label :for=npcUuid>
-        NPC Name:
+        {{ t("label.npcName") }}
       </label>
       <input :id=npcUuid v-model="npcNameRef" @mousedown.stop />
 
       <span :id="openUuid">
-        Open Command:
+        {{ t("label.openCommand") }}
       </span>
       <div v-if="props.data.openCommandNode">
         <button class="command-button" :aria-labelledby="openUuid" @click="selectOpenCommand" @mousedown.stop>
@@ -125,7 +128,7 @@ const sceneTextUuid = `scene-text-${localUuid}`
       </div>
 
       <span :id="closeUuid">
-        Close Command:
+        {{ t("label.closeCommand") }}
       </span>
       <div v-if="props.data.closeCommandNode">
         <button class="command-button" :aria-labelledby="closeUuid" @click="selectCloseCommand" @mousedown.stop>
@@ -142,7 +145,7 @@ const sceneTextUuid = `scene-text-${localUuid}`
 
     <div class="scene-buttons">
       <label :for="buttonsUuid">
-        Buttons
+        {{ t("label.buttons") }}
       </label>
       <div :id="buttonsUuid" class="button-grid">
         <template v-for="(slot, index) in SCENE_MAX_BUTTONS" :key="index">
@@ -161,7 +164,7 @@ const sceneTextUuid = `scene-text-${localUuid}`
 
     <div class="scene-text">
       <label :for=sceneTextUuid>
-        Scene Text
+        {{ t("label.sceneText") }}
       </label>
       <textarea
         :id=sceneTextUuid
