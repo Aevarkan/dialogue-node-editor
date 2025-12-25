@@ -152,6 +152,13 @@
     "Other",
     "Visualization"
   ],
+  "keywords": [
+    "minecraft",
+    "dialogue",
+    "bedrock",
+    "graph",
+    "add-on"
+  ],
   "devDependencies": {
     "@vscode/vsce": "^3.7.0",
     "@workspace/common": "workspace:*",
