@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -40,11 +45,22 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp packages/extension/bedrock-dialogue-node-editor.vsix ./node-editor-extension-$GITHUB_REF_NAME.vsix
-          gh release upload $GITHUB_REF_NAME ./node-editor-extension-$GITHUB_REF_NAME.vsix --clobber
-          echo "### Package Information :package:" >> $GITHUB_STEP_SUMMARY
-          echo "Package size: $(du -h ./node-editor-extension-$GITHUB_REF_NAME.vsix | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          cp packages/extension/bedrock-dialogue-node-editor.vsix ${{ github.workspace }}/node-editor-extension-$GITHUB_REF_NAME.vsix
+          gh release upload $GITHUB_REF_NAME ${{ github.workspace }}/node-editor-extension-$GITHUB_REF_NAME.vsix --clobber
+          echo "### :package: Package Information" >> $GITHUB_STEP_SUMMARY
+          echo "Package size: $(du -h ${{ github.workspace }}/node-editor-extension-$GITHUB_REF_NAME.vsix | cut -f1)" >> $GITHUB_STEP_SUMMARY
           echo "Name: node-editor-extension-$GITHUB_REF_NAME.vsix" >> $GITHUB_STEP_SUMMARY
+
+      - name: Attest build artifact
+        id: attest
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: '${{ github.workspace }}/node-editor-extension-${{ github.ref_name }}.vsix'
+
+      - name: Upload build provenance
+        run: gh release upload $GITHUB_REF_NAME $ATTESTATION_PATH --clobber
+        env:
+          ATTESTATION_PATH: ${{ steps.attest.outputs.bundle-path }}
 
       - name: Publish extension to marketplace
         run: pnpm run deploy
