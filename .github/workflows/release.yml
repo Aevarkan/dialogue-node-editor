@@ -53,14 +53,9 @@ jobs:
 
       - name: Attest build artifact
         id: attest
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest@v4
         with:
           subject-path: '${{ github.workspace }}/node-editor-extension-${{ github.ref_name }}.vsix'
-
-      - name: Upload build provenance
-        run: gh release upload $GITHUB_REF_NAME $ATTESTATION_PATH --clobber
-        env:
-          ATTESTATION_PATH: ${{ steps.attest.outputs.bundle-path }}
 
       - name: Publish extension to marketplace
         run: pnpm run deploy
