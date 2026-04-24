@@ -2,6 +2,7 @@
 
 A Visual Studio Code node editor extension for Minecraft: Bedrock Edition dialogue files.
 
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/aevarkan/dialogue-node-editor/total)
 
 ## Demo Video
 
