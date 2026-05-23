@@ -10,6 +10,12 @@ files: [
   },
   {
     "source": "extension/package.nls.json",
-    "translation": "extension/package.nls.%locale%.json",
+    "translation": "extension/package.nls.%two_letters_code%.json",
+    "languages_mapping": {
+      "two_letters_code": {
+        "zh-CN": "zh-cn",
+        "zh-TW": "zh-tw",
+      }
+    }
   }
 ]
