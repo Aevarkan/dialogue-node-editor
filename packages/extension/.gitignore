@@ -21,3 +21,4 @@
 
 # localisation
 !package.nls.json
+!package.nls.*.json

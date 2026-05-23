@@ -1,0 +1,13 @@
+{
+  "label.parentScene": "Parent Scene",
+  "label.slotIndex": "Slot Index",
+  "label.commands": "Commands",
+  "label.openCommand": "Open Command",
+  "label.closeCommand": "Close Command",
+  "label.sceneText": "Scene Text",
+  "label.npcName": "NPC Name",
+  "label.runsOn": "Runs on",
+  "label.sceneId": "Scene ID",
+  "label.buttons": "Buttons",
+  "label.displayName": "Display Name"
+}

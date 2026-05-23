@@ -1,0 +1,13 @@
+{
+  "label.parentScene": "Scène Parente",
+  "label.slotIndex": "Index des créneaux",
+  "label.commands": "Commandes",
+  "label.openCommand": "Commande ouvrir",
+  "label.closeCommand": "Commande fermée",
+  "label.sceneText": "Texte de scène",
+  "label.npcName": "Nom PNJ",
+  "label.runsOn": "Exécuter sur",
+  "label.sceneId": "ID Scène",
+  "label.buttons": "Boutons",
+  "label.displayName": "Nom Affiché"
+}
