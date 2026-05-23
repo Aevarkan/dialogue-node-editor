@@ -1,7 +1,7 @@
 // Copyright (c) 2025 Aevarkan
 // Licensed under the GPLv3 license
 
-import en from './locales/en'
+import en from './locales/en.json'
 
 import { createI18n } from 'vue-i18n'
 

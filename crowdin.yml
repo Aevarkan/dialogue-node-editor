@@ -5,8 +5,8 @@
 
 files: [
   {
-    "source": "app/src/i18n/locales/en.ts",
-    "translation": "app/src/i18n/locales/%locale_with_underscore%.ts",
+    "source": "app/src/i18n/locales/en.json",
+    "translation": "app/src/i18n/locales/%locale_with_underscore%.json",
   },
   {
     "source": "extension/package.nls.json",
