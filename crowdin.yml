@@ -15,6 +15,7 @@ files: [
       "two_letters_code": {
         "zh-CN": "zh-cn",
         "zh-TW": "zh-tw",
+        "pt-BR": "pt-br"
       }
     }
   }
