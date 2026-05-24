@@ -5,6 +5,7 @@
   "author": "Aevarkan",
   "license": "GPL-3.0-only",
   "displayName": "%bedrockDialogueEditor.displayName%",
+  "description": "%bedrockDialogueEditor.description%",
   "type": "commonjs",
   "scripts": {
     "copy-media": "node scripts/copy-app-media-files.cjs",

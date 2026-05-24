@@ -1,6 +1,7 @@
 {
   "bedrockDialogueEditor.name": "Éditeur de Dialogue Bedrock",
   "bedrockDialogueEditor.displayName": "Éditeur de nœud de dialogues Bedrock",
+  "bedrockDialogueEditor.description": "Visual node editor for Minecraft: Bedrock Edition NPC dialogue files.",
   "bedrockDialogueEditor.openNodeEditor": "Ouvrir l'Éditeur de Dialogue",
   "bedrockDialogueEditor.category": "Éditeur de nœuds",
   "bedrockDialogueEditor.autoOpen.title": "Ouverture automatique",
