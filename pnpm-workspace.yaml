@@ -1,6 +1,13 @@
 packages:
   - packages/*
 
+allowBuilds:
+  '@playwright/browser-chromium': false # only for if you want to play around with the extension in a test browser
+  '@vscode/vsce-sign': false # will need to be enabled in actions
+  esbuild: true # this is pretty important for building
+  keytar: false # yeah nah, no way: this is "A native Node module to get, add, replace, and delete passwords in system's keychain."
+  vue-demi: true # a bit sus, but seems mostly okay due to other security measures, and the extension actually needs this to work
+
 blockExoticSubdeps: true
 
 minimumReleaseAge: 10080
@@ -10,3 +17,9 @@ minimumReleaseAgeStrict: true
 strictDepBuilds: true
 
 trustPolicy: no-downgrade
+
+# trustPolicyExclude:
+#   - semver@5.7.2 # older than a year
+#   - semver@6.3.1 # older than a year
+
+trustPolicyIgnoreAfter: 525600 # older than a year is probably all good

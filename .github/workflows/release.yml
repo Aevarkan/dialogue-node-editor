@@ -60,6 +60,8 @@ jobs:
           subject-path: '${{ github.workspace }}/node-editor-extension-${{ github.ref_name }}.vsix'
 
       - name: Publish extension to marketplace
-        run: pnpm run deploy
+        run: |
+          pnpm rebuild @vscode/vsce-sign
+          pnpm run deploy
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
